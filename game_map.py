@@ -38,7 +38,7 @@ class Map(GameObject):
             for tile in row:
                 if tile == '1':
                     self.screen.blit(self.isay, (x * self.TILE_SIZE_x, y * self.TILE_SIZE_y))
-                if tile != '1':
+                if tile != '0':
                     self.tile_surface.append(
                         pygame.Rect(x * self.TILE_SIZE_x, y * self.TILE_SIZE_y, self.TILE_SIZE_y, self.TILE_SIZE_x))
                 x += 1
