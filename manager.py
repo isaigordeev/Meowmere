@@ -4,32 +4,36 @@ from player import *
 clock = pygame.time.Clock()
 pygame.init()
 
-
 Tanya = Player()
+World = Map()
+World.generation()
+
+
+# World.print_map_seed()
+
+
+def touching(tiles):
+    touches = []
+    for tile in tiles:
+        if Tanya.player_rect.colliderect(tile):
+            touches.append(tile)
+    return touches
+
+
 
 while True:
-    screen.fill(BACKGROUND_COLOR)
-
-    screen.blit(Tanya.player_image, Tanya.player_location)
-
-    Tanya.gravitation()
-
+    World.screen.fill(BACKGROUND_COLOR)
+    World.building()
+    World.screen.blit(Tanya.player_image, (Tanya.player_rect.x, Tanya.player_rect.y))
     Tanya.moving()
-
-    Tanya.player_rect.x = Tanya.player_location[0]
-    Tanya.player_rect.y = Tanya.player_location[1]
-
-    # if Tanya.player_rect.colliderect(Tanya.test_rect):
-    #     pygame.draw.rect(screen, RED, Tanya.test_rect)
-    # else:
-    #     pygame.draw.rect(screen, BLACK, Tanya.test_rect)
-
+    Tanya.walking_ground(World.tile_surface)
+    Tanya.gravitation()
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
         if event.type == KEYDOWN:
-            Tanya.is_moving_up(event)
-        if event.type == KEYUP:
             Tanya.is_moving_down(event)
+        if event.type == KEYUP:
+            Tanya.is_moving_up(event)
     pygame.display.update()
     clock.tick(60)
