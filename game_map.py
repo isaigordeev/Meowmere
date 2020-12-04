@@ -27,6 +27,7 @@ class Map(GameObject):
                     self.game_map[i].append('0')
                 else:
                     self.game_map[i].append('1')
+        self.game_map[4][10] = '1' #test
 
     def print_map_seed(self):
         print(*self.game_map, sep='\n')
@@ -43,3 +44,4 @@ class Map(GameObject):
                         pygame.Rect(x * self.TILE_SIZE_x, y * self.TILE_SIZE_y, self.TILE_SIZE_y, self.TILE_SIZE_x))
                 x += 1
             y += 1
+

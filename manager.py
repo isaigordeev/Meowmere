@@ -28,6 +28,9 @@ while True:
     Tanya.moving()
     Tanya.walking_ground(World.tile_surface)
     Tanya.gravitation()
+
+
+
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
