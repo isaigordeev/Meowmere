@@ -25,7 +25,7 @@ while True:
     World.screen.fill(BACKGROUND_COLOR)
     World.building()
     World.screen.blit(Tanya.player_image, (Tanya.player_rect.x, Tanya.player_rect.y))
-    Tanya.define_evelocity()
+    Tanya.define_velocity()
     Tanya.placement(World.tile_surface)
     Tanya.gravitation()
 
