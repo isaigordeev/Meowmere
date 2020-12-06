@@ -1,5 +1,6 @@
-from game_map import WINDOW_SIZE
-from game_object import *
+import pygame, sys
+
+from pygame.locals import *
 
 
 class Player:
@@ -11,25 +12,14 @@ class Player:
         self.moving_up = False
         self.moving_down = False
         self.velocity = [0, 0]
-        self.step = 5
-        self.player_location = [500, 50]
+        self.step_x = 5
+        self.step_y = -15
+        self.player_location = [50, 0]
         self.player_y_gravitation = 0
         self.player_rect = pygame.Rect(self.player_location[0], self.player_location[1], self.player_image.get_width(),
                                        self.player_image.get_height())
-        self.test_rect = pygame.Rect(100, 100, 100, 50)
+        self.test_rect = pygame.Rect(500, 100, 100, 50)
         self.air_time = 0
-
-    def moving(self):
-        if self.moving_right:
-            self.player_rect.x += self.step
-        if self.moving_left:
-            self.player_rect.x -= self.step
-        if self.moving_up:
-            self.player_rect.y -= self.step * 4
-            self.air_time += 1
-            if self.air_time > 5:
-                self.air_time = 0
-                self.moving_up = False
 
     def is_moving_down(self, event):
         if event.key == K_RIGHT:
@@ -37,38 +27,60 @@ class Player:
         if event.key == K_LEFT:
             self.moving_left = True
         if event.key == K_UP:
-            self.moving_up = True
+            if self.air_time < 6:
+                self.player_y_gravitation = self.step_y
 
     def is_moving_up(self, event):
         if event.key == K_RIGHT:
             self.moving_right = False
+            self.velocity[0] = 0
         if event.key == K_LEFT:
             self.moving_left = False
+            self.velocity[0] = 0
 
-    def touching(self, tiles):
-        touches = []
-        for tile in tiles:
-            if self.player_rect.colliderect(tile):
-                touches.append(tile)
-        return touches
 
-    def gravitation(self):
-        if self.collision_types['bottom']:
-            self.player_y_gravitation = 0
-            self.air_time = 0
-        else:
-            self.player_y_gravitation = 2
-            self.air_time += 1
-        self.player_rect.y += self.player_y_gravitation
-
-    def walking_ground(self, tiles):
-        self.collision_types = {'bottom': False, 'top': False, 'right': False, 'left': False}
+    def placement(self, tiles):
+        self.collision_types = {'top': False, 'bottom': False, 'right': False, 'left': False}
+        self.player_rect.x += self.velocity[0]
         touches = self.touching(tiles)
         for tile in touches:
-            if self.player_y_gravitation > 0:
+            if self.velocity[0] > 0:
+                self.player_rect.right = tile.left
+                self.collision_types['right'] = True
+            elif self.velocity[0] < 0:
+                self.player_rect.left = tile.right
+                self.collision_types['left'] = True
+        self.player_rect.y += self.velocity[1]
+        touches = self.touching(tiles)
+        for tile in touches:
+            if self.velocity[1] > 0:
                 self.player_rect.bottom = tile.top
                 self.collision_types['bottom'] = True
-            elif self.player_y_gravitation < 0:
+            elif self.velocity[1] < 0:
                 self.player_rect.top = tile.bottom
                 self.collision_types['top'] = True
+        return self.player_rect, self.collision_types
 
+    def touching(self, tiles):
+        hit_list = []
+        for tile in tiles:
+            if self.player_rect.colliderect(tile):
+                hit_list.append(tile)
+        return hit_list
+
+    def define_velocity(self):
+        if self.moving_right == True:
+            self.velocity[0] = self.step_x
+        if self.moving_left == True:
+            self.velocity[0] = -self.step_x
+        self.velocity[1] += self.player_y_gravitation
+        self.player_y_gravitation = 0.2
+        if self.player_y_gravitation > 3:
+            self.player_y_gravitation = 3
+
+    def gravitation(self):
+        if self.collision_types['bottom'] == True:
+            self.air_time = 0
+            self.player_y_gravitation = 0
+        else:
+            self.air_time += 1
