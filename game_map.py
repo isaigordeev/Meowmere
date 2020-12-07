@@ -28,20 +28,37 @@ class Map(GameObject):
                 else:
                     self.game_map[i].append('1')
         self.game_map[4][10] = '1' #test
+        self.game_map[7][3] = '1'
+        self.game_map[9][3] = '1'
+        self.game_map[10][2] = '0'
+        self.game_map[10][1] = '0'
+
+
 
     def print_map_seed(self):
         print(*self.game_map, sep='\n')
+    def print_map_seed_by(self):
+        for i in range(int(WINDOW_SIZE[1] / self.isay.get_height()) + 1):
+                print(*self.game_map[i])
 
-    def building(self):
+    def building(self, cam_x, cam_y):
         y = 0
         for row in self.game_map:
             x = 0
             for tile in row:
                 if tile == '1':
-                    self.screen.blit(self.isay, (x * self.TILE_SIZE_x, y * self.TILE_SIZE_y))
+                    self.display.blit(self.isay, (x * self.TILE_SIZE_x - cam_x, y * self.TILE_SIZE_y - cam_y))
                 if tile != '0':
                     self.tile_surface.append(
                         pygame.Rect(x * self.TILE_SIZE_x, y * self.TILE_SIZE_y, self.TILE_SIZE_y, self.TILE_SIZE_x))
                 x += 1
             y += 1
+
+    def map_file_reading(self, path):
+        f = open(path)
+        self.data = f.read()
+        f.close()
+        self.data = self.data.split('\n')
+        for row in self.data:
+            self.game_map.append(list(row))
 

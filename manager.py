@@ -1,15 +1,16 @@
 from game_map import *
 from player import *
+from camera import *
 
 clock = pygame.time.Clock()
 pygame.init()
 
 Tanya = Player()
 World = Map()
-World.generation()
+Camera = Camera()
+World.map_file_reading('map_seed.txt')
 
 
-# World.print_map_seed()
 
 
 def touching(tiles):
@@ -20,16 +21,16 @@ def touching(tiles):
     return touches
 
 
-
 while True:
-    World.screen.fill(BACKGROUND_COLOR)
-    World.building()
-    World.screen.blit(Tanya.player_image, (Tanya.player_rect.x, Tanya.player_rect.y))
+    World.display.fill(BACKGROUND_COLOR)
+
+    Camera.moving_cam(Tanya.player_rect.x, Tanya.player_rect.y)
+
+    World.building(Camera.scroll_speed[0],Camera.scroll_speed[1])
+    World.display.blit(Tanya.player_image, (Tanya.player_rect.x - Camera.scroll_speed[0], Tanya.player_rect.y - Camera.scroll_speed[1]))
     Tanya.define_velocity()
     Tanya.placement(World.tile_surface)
     Tanya.gravitation()
-
-
 
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -38,5 +39,6 @@ while True:
             Tanya.is_moving_down(event)
         if event.type == KEYUP:
             Tanya.is_moving_up(event)
+    World.screen.blit(pygame.transform.scale(World.display, WINDOW_SIZE), (0, 0))
     pygame.display.update()
     clock.tick(60)

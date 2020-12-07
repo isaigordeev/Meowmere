@@ -6,7 +6,6 @@ from pygame.locals import *
 class Player:
     def __init__(self):
         self.player_image = pygame.image.load('pictures/tanya.jpeg')
-
         self.moving_right = False
         self.moving_left = False
         self.moving_up = False
@@ -14,8 +13,9 @@ class Player:
         self.velocity = [0, 0]
         self.step_x = 5
         self.step_y = -15
-        self.player_location = [50, 0]
+        self.player_location = [500, 0]
         self.player_y_gravitation = 0
+        self.gravity_step_down = 0.5
         self.player_rect = pygame.Rect(self.player_location[0], self.player_location[1], self.player_image.get_width(),
                                        self.player_image.get_height())
         self.test_rect = pygame.Rect(500, 100, 100, 50)
@@ -74,7 +74,7 @@ class Player:
         if self.moving_left == True:
             self.velocity[0] = -self.step_x
         self.velocity[1] += self.player_y_gravitation
-        self.player_y_gravitation = 0.2
+        self.player_y_gravitation = self.gravity_step_down
         if self.player_y_gravitation > 3:
             self.player_y_gravitation = 3
 
