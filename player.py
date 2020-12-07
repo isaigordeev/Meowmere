@@ -4,8 +4,9 @@ from pygame.locals import *
 
 class Player:
     def __init__(self):
-        self.player_image = pygame.image.load('pictures/tanya.jpeg')
+        self.player_image = pygame.image.load('pictures/tanya_right.png')
         self.moving_right = False
+        self.last_side = 0
         self.moving_left = False
         self.moving_up = False
         self.moving_down = False
@@ -22,19 +23,19 @@ class Player:
         self.action_dist = 20
 
     def is_moving_down(self, event):
-        if event.key == K_RIGHT:
+        if event.key == K_d:
             self.moving_right = True
-        if event.key == K_LEFT:
+        if event.key == K_a:
             self.moving_left = True
-        if event.key == K_UP:
+        if event.key == K_SPACE:
             if self.air_time < 6:
                 self.player_y_gravitation = self.step_y
 
     def is_moving_up(self, event):
-        if event.key == K_RIGHT:
+        if event.key == K_d:
             self.moving_right = False
             self.velocity[0] = 0
-        if event.key == K_LEFT:
+        if event.key == K_a:
             self.moving_left = False
             self.velocity[0] = 0
 

@@ -1,7 +1,6 @@
 from game_map import *
 from player import *
 from camera import *
-
 clock = pygame.time.Clock()
 pygame.init()
 
@@ -25,6 +24,7 @@ while True:
     Camera.moving_cam(Tanya.player_rect.x, Tanya.player_rect.y)
 
     World.building(Camera.scroll_speed[0],Camera.scroll_speed[1])
+
     World.display.blit(Tanya.player_image, (Tanya.player_rect.x - Camera.scroll_speed[0], Tanya.player_rect.y - Camera.scroll_speed[1]))
     Tanya.define_velocity()
     Tanya.placement(World.tile_surface)
