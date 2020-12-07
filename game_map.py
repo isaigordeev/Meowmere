@@ -50,12 +50,12 @@ class Map(GameObject):
                     self.display.blit(self.isay, (x * self.TILE_SIZE_x - cam_x, y * self.TILE_SIZE_y - cam_y))
                 if tile != '0':
                     self.tile_surface.append(
-                        pygame.Rect(x * self.TILE_SIZE_x, y * self.TILE_SIZE_y, self.TILE_SIZE_y, self.TILE_SIZE_x))
+                        pygame.Rect(x * self.TILE_SIZE_x, y * self.TILE_SIZE_y, self.TILE_SIZE_x, self.TILE_SIZE_y))
                 x += 1
             y += 1
 
     def map_file_reading(self, path):
-        f = open(path)
+        f = open(path+'.txt')
         self.data = f.read()
         f.close()
         self.data = self.data.split('\n')

@@ -8,9 +8,7 @@ pygame.init()
 Tanya = Player()
 World = Map()
 Camera = Camera()
-World.map_file_reading('map_seed.txt')
-
-
+World.map_file_reading('map_seed')
 
 
 def touching(tiles):
@@ -39,6 +37,9 @@ while True:
             Tanya.is_moving_down(event)
         if event.type == KEYUP:
             Tanya.is_moving_up(event)
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            print(event.pos)
+            Tanya.destroy(World.tile_surface, event, World.game_map, TILE_SIZE_x=World.TILE_SIZE_x,TILE_SIZE_y=World.TILE_SIZE_y)
     World.screen.blit(pygame.transform.scale(World.display, WINDOW_SIZE), (0, 0))
     pygame.display.update()
     clock.tick(60)
