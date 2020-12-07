@@ -37,15 +37,15 @@ class Map(GameObject):
         for i in range(int(WINDOW_SIZE[1] / self.grass.get_height()) + 1):
                 print(*self.game_map[i])
 
-    def building(self, cam_x, cam_y):
+    def building(self, camera):
         y = 0
         for row in self.game_map:
             x = 0
             for tile in row:
                 if tile == '1':
-                    self.display.blit(self.grass, (x * self.TILE_SIZE_x - cam_x, y * self.TILE_SIZE_y - cam_y))
+                    self.display.blit(self.grass, (x * self.TILE_SIZE_x - camera[0], y * self.TILE_SIZE_y - camera[1]))
                 if tile == '2':
-                    self.display.blit(self.ground, (x * self.TILE_SIZE_x - cam_x, y * self.TILE_SIZE_y - cam_y))
+                    self.display.blit(self.ground, (x * self.TILE_SIZE_x - camera[0], y * self.TILE_SIZE_y - camera[1]))
                 if tile != '0':
                     self.tile_surface.append(
                         pygame.Rect(x * self.TILE_SIZE_x, y * self.TILE_SIZE_y, self.TILE_SIZE_x, self.TILE_SIZE_y))

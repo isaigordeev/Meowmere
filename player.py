@@ -22,6 +22,13 @@ class Player:
         self.air_time = 0
         self.action_dist = 20
 
+    def handle_player(self, tiles, display, camera_speed):
+        display.blit(self.player_image,
+                           (self.player_rect.x - camera_speed[0], self.player_rect.y - camera_speed[1]))
+        self.define_velocity()
+        self.placement(tiles)
+        self.gravitation()
+
     def is_moving_down(self, event):
         if event.key == K_d:
             self.moving_right = True
