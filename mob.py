@@ -24,8 +24,7 @@ class Mob:
         self.action_dist = 20
 
     def handle_mob(self, tiles, display, player_rect_x, player_rect_y, camera):
-        display.blit(self.mob_image,
-                     (self.mob_rect.x - camera[0], self.mob_rect.y - camera[1]))
+        self.drawing( display,  camera)
         self.define_velocity_mob(player_rect_x, player_rect_y)
         self.placement_mob(tiles)
 
@@ -55,8 +54,12 @@ class Mob:
         if abs(player_rect_x - self.mob_rect.x) < 300:
             if player_rect_x - self.treshhold > self.mob_rect.x:
                 self.velocity[0] = self.step_x / 2
+                self.moving_right = True
+                self.moving_left = False
             if player_rect_x + self.treshhold < self.mob_rect.x:
                 self.velocity[0] = -self.step_x / 2
+                self.moving_left = True
+                self.moving_right = False
             # y - axis
             if abs(player_rect_y - self.mob_rect.y) > 100 + self.treshhold:
                 self.velocity[1] = -self.step_y / 2
@@ -72,3 +75,20 @@ class Mob:
         self.green = pygame.Rect(500, 50, 50, 10)
         if (event.pos[0] - self.mob_rect.x) ** 2 + (event.pos[1] - self.mob_rect.y) ** 2 < 10:
             display.blit(self.red, (500 - camera[0], 50 - camera[1]))
+    
+    def drawing(self, display, camera_speed):
+        if self.moving_right:
+            display.blit(pygame.transform.flip(self.mob_image, True, False),
+                         (self.mob_rect.x - camera_speed[0], self.mob_rect.y - camera_speed[1]))
+            self.last_side = 0
+        elif self.moving_left:
+            display.blit(pygame.transform.flip(self.mob_image, False, False),
+                         (self.mob_rect.x - camera_speed[0], self.mob_rect.y - camera_speed[1]))
+            self.last_side = 1
+        elif not self.moving_right and not self.moving_left:
+            if self.last_side == 0:
+                display.blit(pygame.transform.flip(self.mob_image, False, False),
+                             (self.mob_rect.x - camera_speed[0], self.mob_rect.y - camera_speed[1]))
+            elif self.last_side == 1:
+                display.blit(pygame.transform.flip(self.mob_image, True, False),
+                             (self.mob_rect.x - camera_speed[0], self.mob_rect.y - camera_speed[1]))

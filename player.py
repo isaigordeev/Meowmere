@@ -22,8 +22,7 @@ class Player:
         self.action_dist = 20
 
     def handle_player(self, tiles, display, camera_speed):
-        display.blit(self.player_image,
-                     (self.player_rect.x - camera_speed[0], self.player_rect.y - camera_speed[1]))
+        self.drawing(display, camera_speed)
         self.define_velocity()
         self.placement(tiles)
         self.gravitation()
@@ -47,7 +46,6 @@ class Player:
             self.velocity[0] = 0
         if event.key == K_SPACE:
             self.velocity[1] = 1
-
 
     def placement(self, tiles):
         self.collision_types = {'top': False, 'bottom': False, 'right': False, 'left': False}
@@ -94,6 +92,23 @@ class Player:
             self.player_y_gravitation = 0
         else:
             self.air_time += 1
+
+    def drawing(self, display, camera_speed):
+        if self.moving_right:
+            display.blit(pygame.transform.flip(self.player_image, False, False),
+                         (self.player_rect.x - camera_speed[0], self.player_rect.y - camera_speed[1]))
+            self.last_side = 0
+        elif self.moving_left:
+            display.blit(pygame.transform.flip(self.player_image, True, False),
+                         (self.player_rect.x - camera_speed[0], self.player_rect.y - camera_speed[1]))
+            self.last_side = 1
+        elif not self.moving_right and not self.moving_left:
+            if self.last_side == 0:
+                display.blit(pygame.transform.flip(self.player_image, False, False),
+                             (self.player_rect.x - camera_speed[0], self.player_rect.y - camera_speed[1]))
+            elif self.last_side == 1:
+                display.blit(pygame.transform.flip(self.player_image, True, False),
+                             (self.player_rect.x - camera_speed[0], self.player_rect.y - camera_speed[1]))
 
     def destroy(self, tiles, event, game_map, TILE_SIZE_x, TILE_SIZE_y):
 
