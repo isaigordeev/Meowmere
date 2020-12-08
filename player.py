@@ -3,7 +3,7 @@ from pygame.locals import *
 
 
 class Player:
-    def __init__(self):
+    def __init__(self, player_location):
         self.player_image = pygame.image.load('pictures/tanya_right.png')
         self.moving_right = False
         self.last_side = 0
@@ -13,18 +13,17 @@ class Player:
         self.velocity = [0, 0]
         self.step_x = 5
         self.step_y = -15
-        self.player_location = [500, 0]
+        self.player_location = player_location
         self.player_y_gravitation = 0
         self.gravity_step_down = 0.3
         self.player_rect = pygame.Rect(self.player_location[0], self.player_location[1], self.player_image.get_width(),
                                        self.player_image.get_height())
-        self.test_rect = pygame.Rect(500, 100, 100, 50)
         self.air_time = 0
         self.action_dist = 20
 
     def handle_player(self, tiles, display, camera_speed):
         display.blit(self.player_image,
-                           (self.player_rect.x - camera_speed[0], self.player_rect.y - camera_speed[1]))
+                     (self.player_rect.x - camera_speed[0], self.player_rect.y - camera_speed[1]))
         self.define_velocity()
         self.placement(tiles)
         self.gravitation()
@@ -35,6 +34,7 @@ class Player:
         if event.key == K_a:
             self.moving_left = True
         if event.key == K_SPACE:
+            self.velocity[1] = 7
             if self.air_time < 6:
                 self.player_y_gravitation = self.step_y
 
@@ -45,6 +45,8 @@ class Player:
         if event.key == K_a:
             self.moving_left = False
             self.velocity[0] = 0
+        if event.key == K_SPACE:
+            self.velocity[1] = 1
 
 
     def placement(self, tiles):
@@ -96,7 +98,8 @@ class Player:
     def destroy(self, tiles, event, game_map, TILE_SIZE_x, TILE_SIZE_y):
 
         for tile in tiles:
-            radius = (TILE_SIZE_x/2)
-            if (self.player_rect.x - event.pos[0])**2 + (self.player_rect.y - event.pos[1])**2 <= self.action_dist**2:
-                if (tile.x + radius/2 - event.pos[0])**2 + ( tile.y + radius/2 - event.pos[1]) ** 2 <= radius ** 2:
-                    game_map[int(tile.x/TILE_SIZE_x)][int(tile.y/TILE_SIZE_y)] = '0'
+            radius = (TILE_SIZE_x / 2)
+            if (self.player_rect.x - event.pos[0]) ** 2 + (
+                    self.player_rect.y - event.pos[1]) ** 2 <= self.action_dist ** 2:
+                if (tile.x + radius / 2 - event.pos[0]) ** 2 + (tile.y + radius / 2 - event.pos[1]) ** 2 <= radius ** 2:
+                    game_map[int(tile.x / TILE_SIZE_x)][int(tile.y / TILE_SIZE_y)] = '0'

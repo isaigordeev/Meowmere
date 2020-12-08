@@ -3,7 +3,8 @@ from pygame.locals import *
 
 
 class Mob:
-    def __init__(self):
+    def __init__(self, mob_location, treshhold):
+        self.treshhold = 30*treshhold
         self.mob_image = pygame.image.load('pictures/ghost.gif')
         self.moving_right = False
         self.last_side = 0
@@ -13,7 +14,7 @@ class Mob:
         self.velocity = [0, 0]
         self.step_x = 5
         self.step_y = -15
-        self.mob_location = [0, 100]
+        self.mob_location = mob_location
         self.mob_y_gravitation = 0
         self.gravity_step_down = 0.3
         self.mob_rect = pygame.Rect(self.mob_location[0], self.mob_location[1], self.mob_image.get_width(),
@@ -52,16 +53,16 @@ class Mob:
 
     def define_velocity_mob(self, player_rect_x, player_rect_y):
         if abs(player_rect_x - self.mob_rect.x) < 300:
-            if player_rect_x - 30 > self.mob_rect.x:
+            if player_rect_x - self.treshhold > self.mob_rect.x:
                 self.velocity[0] = self.step_x / 2
-            if player_rect_x + 30 < self.mob_rect.x:
+            if player_rect_x + self.treshhold < self.mob_rect.x:
                 self.velocity[0] = -self.step_x / 2
             # y - axis
-            if abs(player_rect_y - self.mob_rect.y) > 130:
+            if abs(player_rect_y - self.mob_rect.y) > 100 + self.treshhold:
                 self.velocity[1] = -self.step_y / 2
                 if abs(player_rect_y - self.mob_rect.y) == 100 :
                     self.velocity[1] = 0
-            if abs(player_rect_y - self.mob_rect.y) < 70:
+            if abs(player_rect_y - self.mob_rect.y) < 100 - self.treshhold:
                 self.velocity[1] = +self.step_y / 2
                 if abs(player_rect_y - self.mob_rect.y) == 100:
                     self.velocity[1] = 0
