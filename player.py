@@ -127,6 +127,7 @@ class Player:
                              (self.player_rect.x - camera_speed[0], self.player_rect.y - camera_speed[1]))
 
     def destroy(self, tiles, event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera:[]):
+        a = self.ground_item
         for tile in tiles:
             radius = (TILE_SIZE_x / 2)
             if (self.player_rect.x - camera[0] - event.pos[0] + TILE_SIZE_x/2) ** 2 + (
@@ -135,24 +136,35 @@ class Player:
                         tile.y + radius / 2 - camera[1] - event.pos[1]) ** 2 <= radius ** 2:
                     tiles.remove(tile)
                     self.ground_item += 1
+                    if self.ground_item - a > 1:
+                        self.ground_item = a + 1
                     if game_map[int((event.pos[1] + camera[1]) / TILE_SIZE_y)][
                         int((event.pos[0] + camera[0]) / TILE_SIZE_x)] == '2':
                         game_map[int(tile.y / TILE_SIZE_y)][int(tile.x / TILE_SIZE_x)] = '0'
-                        if self.ground_item > 0:
-                            self.ground_inventory = True
-                        else:
-                            self.ground_inventory = False
+
+
+    def inventory_define(self):
+        if self.ground_item > 0:
+            self.ground_inventory = True
+        else:
+            self.ground_inventory = False
+
 
     def build(self, tiles, event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera:[]):
-                if (self.player_rect.x - camera[0] - event.pos[0] + TILE_SIZE_x/2) ** 2 + (
-                        self.player_rect.y - camera[1] - event.pos[1] + TILE_SIZE_y) ** 2 <= self.action_dist:
-                        if self.num == self.ground_number:
-                            if self.ground_inventory:
-                                game_map[int((event.pos[1] +  camera[1]) / TILE_SIZE_y)][int((event.pos[0] + camera[0])/ TILE_SIZE_x)] = '2'
-                                tiles.append(pygame.Rect(int((event.pos[1] +  camera[1])/ TILE_SIZE_y)*TILE_SIZE_x,int((event.pos[0] +camera[0]) / TILE_SIZE_x)*TILE_SIZE_y, TILE_SIZE_x, TILE_SIZE_y))
-                                self.ground_item -= 1
+        self.inventory_define()
+        if (self.player_rect.x - camera[0] - event.pos[0] + TILE_SIZE_x / 2) ** 2 + (
+                self.player_rect.y - camera[1] - event.pos[1] + TILE_SIZE_y) ** 2 <= self.action_dist:
+            if self.num == self.ground_number:
+                if self.ground_inventory:
+                    self.ground_item -= 1
+                    game_map[int((event.pos[1] + camera[1]) / TILE_SIZE_y)][
+                        int((event.pos[0] + camera[0]) / TILE_SIZE_x)] = '2'
+                    tiles.append(pygame.Rect(int((event.pos[1] + camera[1]) / TILE_SIZE_y) * TILE_SIZE_x,
+                                             int((event.pos[0] + camera[0]) / TILE_SIZE_x) * TILE_SIZE_y, TILE_SIZE_x,
+                                             TILE_SIZE_y))
 
     def inventory(self, display):
+        self.inventory_define()
         pygame.draw.rect(display, (GREY), self.inventory_rect)
         pygame.draw.rect(display, RED, pygame.Rect(self.inventory_location[0] + (self.num - 1) * self.player_image.get_width()*self.inventory_size,
                                        self.inventory_location[1],
