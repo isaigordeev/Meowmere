@@ -114,7 +114,6 @@ class Player:
         print((self.player_rect.x - camera[0] - event.pos[0] + TILE_SIZE_x/2) ** 2 + (
                     self.player_rect.y - camera[1] - event.pos[1] + TILE_SIZE_y) ** 2)
         for tile in tiles:
-            i = 0
             radius = (TILE_SIZE_x / 2)
             if (self.player_rect.x - camera[0] - event.pos[0] + TILE_SIZE_x/2) ** 2 + (
                     self.player_rect.y - camera[1] - event.pos[1] + TILE_SIZE_y) ** 2 <= self.action_dist:
@@ -122,3 +121,10 @@ class Player:
                         tile.y + radius / 2 - camera[1] - event.pos[1]) ** 2 <= radius ** 2:
                     game_map[int(tile.y / TILE_SIZE_y)][int(tile.x / TILE_SIZE_x)] = '0'
                     tiles.remove(tile)
+
+    def build(self, tiles, event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera:[]):
+            radius = (TILE_SIZE_x / 2)
+            if (self.player_rect.x - camera[0] - event.pos[0] + TILE_SIZE_x/2) ** 2 + (
+                    self.player_rect.y - camera[1] - event.pos[1] + TILE_SIZE_y) ** 2 <= self.action_dist:
+                    game_map[int((event.pos[1] +  camera[1]) / TILE_SIZE_y)][int((event.pos[0] + camera[0])/ TILE_SIZE_x)] = '2'
+                    tiles.append(pygame.Rect(int((event.pos[1] +  camera[1])/ TILE_SIZE_y)*TILE_SIZE_x,int((event.pos[0] +camera[0]) / TILE_SIZE_x)*TILE_SIZE_y, TILE_SIZE_x, TILE_SIZE_y))

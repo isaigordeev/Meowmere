@@ -31,7 +31,15 @@ class Mob:
     def placement_mob(self, tiles):
         self.collision_types = {'top': False, 'bottom': False, 'right': False, 'left': False}
         self.mob_rect.x += self.velocity[0]
-        # left-right wall disabled
+        # left-right wall enabled
+        touches = self.touching_mob(tiles)
+        for tile in touches:
+            if self.velocity[0] > 0:
+                self.mob_rect.right = tile.left
+                self.collision_types['right'] = True
+            elif self.velocity[0] < 0:
+                self.mob_rect.left = tile.right
+                self.collision_types['left'] = True
         self.mob_rect.y += self.velocity[1]
         touches = self.touching_mob(tiles)
         for tile in touches:

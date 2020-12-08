@@ -5,6 +5,7 @@ pygame.display.set_caption('under_Terraria')
 WINDOW_SIZE = (500, 400)
 
 BACKGROUND_COLOR = (146, 244, 255)
+BROWN = (125,75,0)
 RED = (255, 0, 0)
 BLACK = (0, 0, 0)
 
