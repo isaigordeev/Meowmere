@@ -6,6 +6,7 @@ WINDOW_SIZE = (500, 400)
 
 BACKGROUND_COLOR = (146, 244, 255)
 BROWN = (125,75,0)
+GREY  = (150,150,150)
 RED = (255, 0, 0)
 BLACK = (0, 0, 0)
 
@@ -14,12 +15,13 @@ class Map(GameObject):
     def __init__(self):
         self.tile_surface = []
         self.game_map = [[]]
-        self.screen = pygame.display.set_mode(WINDOW_SIZE, 0, 32)
+        self.screen = pygame.display.set_mode(WINDOW_SIZE, DOUBLEBUF, 32)
         self.grass = pygame.image.load('pictures/ground1.png')
         self.ground =  pygame.image.load('pictures/ground2.png')
         self.TILE_SIZE_x = self.grass.get_width()
         self.TILE_SIZE_y = self.grass.get_height()
         self.display = pygame.Surface(WINDOW_SIZE)
+
 
     def generation(self):
         for i in range(int(WINDOW_SIZE[1] / self.grass.get_height()) + 1):
@@ -39,6 +41,8 @@ class Map(GameObject):
                 print(*self.game_map[i])
 
     def building(self, camera):
+        self.grass = self.grass.convert_alpha()
+        self.ground = self.ground.convert_alpha()
         y = 0
         for row in self.game_map:
             x = 0
