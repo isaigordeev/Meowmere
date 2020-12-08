@@ -34,9 +34,9 @@ while True:
         if event.type == KEYUP:
             Tanya.is_moving_up(event)
         if event.type == pygame.MOUSEBUTTONDOWN:
-            print(event.pos)
-            Tanya.destroy(World.tile_surface, event, World.game_map, TILE_SIZE_x=World.TILE_SIZE_x,
-                          TILE_SIZE_y=World.TILE_SIZE_y)
+            if event.button  == 1:
+                Tanya.destroy(World.tile_surface, event, World.game_map, TILE_SIZE_x=World.TILE_SIZE_x,
+                              TILE_SIZE_y=World.TILE_SIZE_y, camera = Camera.scroll_speed)
 
     World.screen.blit(pygame.transform.scale(World.display, WINDOW_SIZE), (0, 0))
     pygame.display.update()

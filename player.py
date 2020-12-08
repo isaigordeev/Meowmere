@@ -19,7 +19,7 @@ class Player:
         self.player_rect = pygame.Rect(self.player_location[0], self.player_location[1], self.player_image.get_width(),
                                        self.player_image.get_height())
         self.air_time = 0
-        self.action_dist = 20
+        self.action_dist = 8000
 
     def handle_player(self, tiles, display, camera_speed):
         self.drawing(display, camera_speed)
@@ -110,11 +110,15 @@ class Player:
                 display.blit(pygame.transform.flip(self.player_image, True, False),
                              (self.player_rect.x - camera_speed[0], self.player_rect.y - camera_speed[1]))
 
-    def destroy(self, tiles, event, game_map, TILE_SIZE_x, TILE_SIZE_y):
-
+    def destroy(self, tiles, event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera:[]):
+        print((self.player_rect.x - camera[0] - event.pos[0] + TILE_SIZE_x/2) ** 2 + (
+                    self.player_rect.y - camera[1] - event.pos[1] + TILE_SIZE_y) ** 2)
         for tile in tiles:
+            i = 0
             radius = (TILE_SIZE_x / 2)
-            if (self.player_rect.x - event.pos[0]) ** 2 + (
-                    self.player_rect.y - event.pos[1]) ** 2 <= self.action_dist ** 2:
-                if (tile.x + radius / 2 - event.pos[0]) ** 2 + (tile.y + radius / 2 - event.pos[1]) ** 2 <= radius ** 2:
-                    game_map[int(tile.x / TILE_SIZE_x)][int(tile.y / TILE_SIZE_y)] = '0'
+            if (self.player_rect.x - camera[0] - event.pos[0] + TILE_SIZE_x/2) ** 2 + (
+                    self.player_rect.y - camera[1] - event.pos[1] + TILE_SIZE_y) ** 2 <= self.action_dist:
+                if (tile.x + radius / 2 - camera[0] - event.pos[0]) ** 2 + (
+                        tile.y + radius / 2 - camera[1] - event.pos[1]) ** 2 <= radius ** 2:
+                    game_map[int(tile.y / TILE_SIZE_y)][int(tile.x / TILE_SIZE_x)] = '0'
+                    tiles.remove(tile)
