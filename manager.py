@@ -16,7 +16,10 @@ World.map_file_reading('map_seed')
 
 while True:
     World.display.fill(BACKGROUND_COLOR)
+
     Camera.moving_cam(Tanya.player_rect.x, Tanya.player_rect.y)
+    pygame.draw.rect(World.display, (BROWN), pygame.Rect(0 - Camera.scroll_speed[0]
+                                                         , 175 - Camera.scroll_speed[1], 1000, 1000))  # cavern background style
 
     World.building(Camera.scroll_speed)
 
@@ -34,9 +37,13 @@ while True:
         if event.type == KEYUP:
             Tanya.is_moving_up(event)
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button  == 1:
+            if event.button == 1:
                 Tanya.destroy(World.tile_surface, event, World.game_map, TILE_SIZE_x=World.TILE_SIZE_x,
-                              TILE_SIZE_y=World.TILE_SIZE_y, camera = Camera.scroll_speed)
+                              TILE_SIZE_y=World.TILE_SIZE_y, camera=Camera.scroll_speed)
+            if event.button == 3:
+                Tanya.build(World.tile_surface, event, World.game_map, TILE_SIZE_x=World.TILE_SIZE_x,
+                              TILE_SIZE_y=World.TILE_SIZE_y, camera=Camera.scroll_speed)
+
 
     World.screen.blit(pygame.transform.scale(World.display, WINDOW_SIZE), (0, 0))
     pygame.display.update()
