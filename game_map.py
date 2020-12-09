@@ -18,6 +18,8 @@ class Map(GameObject):
         self.screen = pygame.display.set_mode(WINDOW_SIZE, DOUBLEBUF, 32)
         self.grass = pygame.image.load('pictures/ground1.png')
         self.ground =  pygame.image.load('pictures/ground2.png')
+        self.stone =  pygame.image.load('pictures/stone.png')
+        self.bedrock = pygame.image.load('pictures/bedrock.png')
         self.TILE_SIZE_x = self.grass.get_width()
         self.TILE_SIZE_y = self.grass.get_height()
         self.display = pygame.Surface(WINDOW_SIZE)
@@ -51,6 +53,11 @@ class Map(GameObject):
                     self.display.blit(self.grass, (x * self.TILE_SIZE_x - camera[0], y * self.TILE_SIZE_y - camera[1]))
                 if tile == '2':
                     self.display.blit(self.ground, (x * self.TILE_SIZE_x - camera[0], y * self.TILE_SIZE_y - camera[1]))
+                if tile == '3':
+                    self.display.blit(self.stone, (x * self.TILE_SIZE_x - camera[0], y * self.TILE_SIZE_y - camera[1]))
+                if tile == '4':
+                    self.display.blit(self.bedrock,
+                                        (x * self.TILE_SIZE_x - camera[0], y * self.TILE_SIZE_y - camera[1]))
                 if tile != '0':
                     self.tile_surface.append(
                         pygame.Rect(x * self.TILE_SIZE_x, y * self.TILE_SIZE_y, self.TILE_SIZE_x, self.TILE_SIZE_y))

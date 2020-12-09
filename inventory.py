@@ -1,6 +1,7 @@
 import pygame, sys
 from pygame.locals import *
-from game_map import GREY, WINDOW_SIZE, RED
+from game_map import GREY, WINDOW_SIZE, RED, BLACK
+
 
 
 class Inventory:
@@ -12,6 +13,8 @@ class Inventory:
         self.object_number = object_number
         self.inventory_size = inventory_size
         self.identificator = identificator
+        self.inventory_num_size = inventory_size
+
 
 
     def inventory_define(self):
@@ -28,6 +31,7 @@ class Inventory:
                          self.inventory_location[0] + (
                                      self.object_number - 1) * self.object.get_width() * self.inventory_size,
                          self.inventory_location[1]))
+
 
     def inventory_build(self, event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera, num):
         if num == self.object_number:

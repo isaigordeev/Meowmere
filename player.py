@@ -2,6 +2,7 @@ import pygame, sys
 from pygame.locals import *
 from game_map import GREY, WINDOW_SIZE, RED
 from inventory import *
+pygame.font.init()
 
 class Player:
     def __init__(self, player_location):
@@ -31,8 +32,9 @@ class Player:
         self.num = 1
 
         self.ground = Inventory(pygame.image.load('pictures/inventory/ground2.png'), 4, self.inventory_size, self.inventory_location, '2')
-        self.grass = Inventory(pygame.image.load('pictures/inventory/ground1.png'), 3, self.inventory_size, self.inventory_location, '1')
-
+        self.grass = Inventory(pygame.image.load('pictures/inventory/ground1.png'), 5, self.inventory_size, self.inventory_location, '1')
+        self.stone = Inventory(pygame.image.load('pictures/inventory/stone.png'), 6, self.inventory_size, self.inventory_location, '3')
+        self.labelFont = pygame.font.SysFont('Italic', 20*int(self.inventory_size))
 
     def handle_player(self, tiles, display, camera_speed):
         self.drawing(display, camera_speed)
@@ -128,6 +130,7 @@ class Player:
     def destroy(self, tiles, event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera: []):
         a = self.ground.object_item
         b = self.grass.object_item
+        c = self.stone.object_item
         for tile in tiles:
             radius = (TILE_SIZE_x / 2)
             if (self.player_rect.x - camera[0] - event.pos[0] + TILE_SIZE_x / 2) ** 2 + (
@@ -147,17 +150,23 @@ class Player:
                         if self.grass.object_item - b > 1:
                             self.grass.object_item = b + 1
                         game_map[int(tile.y / TILE_SIZE_y)][int(tile.x / TILE_SIZE_x)] = '0'
-
+                    if game_map[int((event.pos[1] + camera[1]) / TILE_SIZE_y)][
+                        int((event.pos[0] + camera[0]) / TILE_SIZE_x)] == self.stone.identificator:
+                        self.stone.object_item += 1
+                        if self.stone.object_item - c > 1:
+                            self.stone.object_item = c + 1
+                        game_map[int(tile.y / TILE_SIZE_y)][int(tile.x / TILE_SIZE_x)] = '0'
 
 
     def build(self, tiles, event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera: []):
         self.ground.inventory_define()
         self.grass.inventory_define()
-
+        self.stone.inventory_define()
         if (self.player_rect.x - camera[0] - event.pos[0] + TILE_SIZE_x / 2) ** 2 + (
                 self.player_rect.y - camera[1] - event.pos[1] + TILE_SIZE_y) ** 2 <= self.action_dist:
             self.ground.inventory_build(event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera, self.num)
             self.grass.inventory_build(event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera, self.num)
+            self.stone.inventory_build(event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera, self.num)
             tiles.append(pygame.Rect(int((event.pos[1] + camera[1]) / TILE_SIZE_y) * TILE_SIZE_x,
                                      int((event.pos[0] + camera[0]) / TILE_SIZE_x) * TILE_SIZE_y, TILE_SIZE_x,
                                      TILE_SIZE_y))
@@ -165,13 +174,19 @@ class Player:
 
     def inventory(self, display):
         pygame.draw.rect(display, (GREY), self.inventory_rect)
-        pygame.draw.rect(display, RED, pygame.Rect(self.inventory_location[0] + (self.num - 1) * self.player_image.get_width()*self.inventory_size,
-                                       self.inventory_location[1],
-                                       self.player_image.get_width()*self.inventory_size,
-                                       self.player_image.get_width()*self.inventory_size), 3)
         self.ground.object_inventory_show(display)
         self.grass.object_inventory_show(display)
-
+        self.stone.object_inventory_show(display)
+        pygame.draw.rect(display, RED, pygame.Rect(
+            self.inventory_location[0] + (self.num - 1) * self.player_image.get_width() * self.inventory_size,
+            self.inventory_location[1],
+            self.player_image.get_width() * self.inventory_size,
+            self.player_image.get_width() * self.inventory_size), 3)
+        for object_number in range(self.inventory_number_items+1):
+            display.blit(self.labelFont.render(str(object_number), False, BLACK), (
+                self.inventory_location[0] + ((
+                        object_number - 1) * self.player_image.get_width()+3) * self.inventory_size,
+                self.inventory_location[1]+1 * self.inventory_size,))
     def choice_item(self, event):
         if event.key == K_1:
             self.num = 1
