@@ -1,7 +1,7 @@
 import pygame, sys
 from pygame.locals import *
 from game_map import GREY, WINDOW_SIZE, RED
-
+from inventory import *
 
 class Player:
     def __init__(self, player_location):
@@ -25,14 +25,13 @@ class Player:
         self.inventory_location = [10, 10]
         self.inventory_number_items = 6
         self.inventory_size = 1.5
-        self.inventory_rect = pygame.Rect(self.inventory_location[0], self.inventory_location[1] ,
-                                            self.inventory_number_items*self.player_image.get_width()*self.inventory_size, self.player_image.get_width()*self.inventory_size)
+        self.inventory_rect = pygame.Rect(self.inventory_location[0], self.inventory_location[1],
+                                          self.inventory_number_items * self.player_image.get_width() * self.inventory_size,
+                                          self.player_image.get_width() * self.inventory_size)
         self.num = 1
 
-        self.ground =pygame.image.load('pictures/inventory/ground2.png')
-        self.ground_item = 0
-        self.ground_inventory = False
-        self.ground_number = 4
+        self.ground = Inventory(pygame.image.load('pictures/inventory/ground2.png'), 4, self.inventory_size, self.inventory_location, '2')
+        self.grass = Inventory(pygame.image.load('pictures/inventory/ground1.png'), 3, self.inventory_size, self.inventory_location, '1')
 
 
     def handle_player(self, tiles, display, camera_speed):
@@ -126,52 +125,52 @@ class Player:
                 display.blit(pygame.transform.flip(self.player_image, True, False),
                              (self.player_rect.x - camera_speed[0], self.player_rect.y - camera_speed[1]))
 
-    def destroy(self, tiles, event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera:[]):
-        a = self.ground_item
+    def destroy(self, tiles, event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera: []):
+        a = self.ground.object_item
+        b = self.grass.object_item
         for tile in tiles:
             radius = (TILE_SIZE_x / 2)
-            if (self.player_rect.x - camera[0] - event.pos[0] + TILE_SIZE_x/2) ** 2 + (
+            if (self.player_rect.x - camera[0] - event.pos[0] + TILE_SIZE_x / 2) ** 2 + (
                     self.player_rect.y - camera[1] - event.pos[1] + TILE_SIZE_y) ** 2 <= self.action_dist:
                 if (tile.x + radius / 2 - camera[0] - event.pos[0]) ** 2 + (
                         tile.y + radius / 2 - camera[1] - event.pos[1]) ** 2 <= radius ** 2:
                     tiles.remove(tile)
-                    self.ground_item += 1
-                    if self.ground_item - a > 1:
-                        self.ground_item = a + 1
                     if game_map[int((event.pos[1] + camera[1]) / TILE_SIZE_y)][
-                        int((event.pos[0] + camera[0]) / TILE_SIZE_x)] == '2':
+                        int((event.pos[0] + camera[0]) / TILE_SIZE_x)] == self.ground.identificator:
+                        self.ground.object_item += 1
+                        if self.ground.object_item - a > 1:
+                            self.ground.object_item = a + 1
+                        game_map[int(tile.y / TILE_SIZE_y)][int(tile.x / TILE_SIZE_x)] = '0'
+                    if game_map[int((event.pos[1] + camera[1]) / TILE_SIZE_y)][
+                        int((event.pos[0] + camera[0]) / TILE_SIZE_x)] == self.grass.identificator:
+                        self.grass.object_item += 1
+                        if self.grass.object_item - b > 1:
+                            self.grass.object_item = b + 1
                         game_map[int(tile.y / TILE_SIZE_y)][int(tile.x / TILE_SIZE_x)] = '0'
 
 
-    def inventory_define(self):
-        if self.ground_item > 0:
-            self.ground_inventory = True
-        else:
-            self.ground_inventory = False
 
+    def build(self, tiles, event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera: []):
+        self.ground.inventory_define()
+        self.grass.inventory_define()
 
-    def build(self, tiles, event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera:[]):
-        self.inventory_define()
         if (self.player_rect.x - camera[0] - event.pos[0] + TILE_SIZE_x / 2) ** 2 + (
                 self.player_rect.y - camera[1] - event.pos[1] + TILE_SIZE_y) ** 2 <= self.action_dist:
-            if self.num == self.ground_number:
-                if self.ground_inventory:
-                    self.ground_item -= 1
-                    game_map[int((event.pos[1] + camera[1]) / TILE_SIZE_y)][
-                        int((event.pos[0] + camera[0]) / TILE_SIZE_x)] = '2'
-                    tiles.append(pygame.Rect(int((event.pos[1] + camera[1]) / TILE_SIZE_y) * TILE_SIZE_x,
-                                             int((event.pos[0] + camera[0]) / TILE_SIZE_x) * TILE_SIZE_y, TILE_SIZE_x,
-                                             TILE_SIZE_y))
+            self.ground.inventory_build(event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera, self.num)
+            self.grass.inventory_build(event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera, self.num)
+            tiles.append(pygame.Rect(int((event.pos[1] + camera[1]) / TILE_SIZE_y) * TILE_SIZE_x,
+                                     int((event.pos[0] + camera[0]) / TILE_SIZE_x) * TILE_SIZE_y, TILE_SIZE_x,
+                                     TILE_SIZE_y))
+
 
     def inventory(self, display):
-        self.inventory_define()
         pygame.draw.rect(display, (GREY), self.inventory_rect)
         pygame.draw.rect(display, RED, pygame.Rect(self.inventory_location[0] + (self.num - 1) * self.player_image.get_width()*self.inventory_size,
                                        self.inventory_location[1],
                                        self.player_image.get_width()*self.inventory_size,
                                        self.player_image.get_width()*self.inventory_size), 3)
-        if self.ground_inventory:
-            display.blit(pygame.transform.scale(self.ground, (int(self.ground.get_width()*self.inventory_size),int(self.ground.get_height()*self.inventory_size))), (self.inventory_location[0] + (self.ground_number-1) * self.ground.get_width()*self.inventory_size, self.inventory_location[1]))
+        self.ground.object_inventory_show(display)
+        self.grass.object_inventory_show(display)
 
     def choice_item(self, event):
         if event.key == K_1:
