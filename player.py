@@ -25,7 +25,7 @@ class Player:
 
         self.inventory_location = [10, 10]
         self.inventory_number_items = 6
-        self.inventory_size = 1.5
+        self.inventory_size = 1
         self.inventory_rect = pygame.Rect(self.inventory_location[0], self.inventory_location[1],
                                           self.inventory_number_items * self.player_image.get_width() * self.inventory_size,
                                           self.player_image.get_width() * self.inventory_size)
@@ -190,7 +190,11 @@ class Player:
             display.blit(self.labelFont.render(str(object_number), False, BLACK), (
                 self.inventory_location[0] + ((
                         object_number - 1) * self.player_image.get_width()+3) * self.inventory_size,
-                self.inventory_location[1]+1 * self.inventory_size,))
+                self.inventory_location[1]+1 * self.inventory_size))
+            self.ground.object_item_show(display, object_number, self.labelFont)
+            self.stone.object_item_show(display, object_number, self.labelFont)
+            self.grass.object_item_show(display, object_number, self.labelFont)
+
     def choice_item(self, event):
         if event.key == K_1:
             self.num = 1

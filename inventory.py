@@ -1,7 +1,6 @@
 import pygame, sys
 from pygame.locals import *
-from game_map import GREY, WINDOW_SIZE, RED, BLACK
-
+from game_map import GREY, WINDOW_SIZE, RED, BLACK, BROWN
 
 
 class Inventory:
@@ -32,6 +31,14 @@ class Inventory:
                                      self.object_number - 1) * self.object.get_width() * self.inventory_size,
                          self.inventory_location[1]))
 
+    def object_item_show(self, display, object_number, labelFont):
+        if object_number == self.object_number:
+            display.blit(labelFont.render(str(self.object_item), False, BLACK), (
+                self.inventory_location[0] + ((
+                                                      object_number - 1) * self.object.get_width() + 15) * self.inventory_size,
+                self.inventory_location[1] + (self.object.get_height()-14) * self.inventory_size))
+
+
 
     def inventory_build(self, event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera, num):
         if num == self.object_number:
@@ -41,3 +48,4 @@ class Inventory:
                     self.object_item -= 1
                     game_map[int((event.pos[1] + camera[1]) / TILE_SIZE_y)][
                         int((event.pos[0] + camera[0]) / TILE_SIZE_x)] = self.identificator
+
