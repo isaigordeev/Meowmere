@@ -1,10 +1,12 @@
 import pygame, sys
 from pygame.locals import *
 
+from game_map import RED, GREEN, WINDOW_SIZE
+
 
 class Mob:
-    def __init__(self, mob_location, treshhold):
-        self.treshhold = 30*treshhold
+    def __init__(self, mob_location, difficulty):
+        self.difficulty = 30*difficulty
         self.mob_image = pygame.image.load('pictures/ghost.gif')
         self.moving_right = False
         self.last_side = 0
@@ -19,12 +21,16 @@ class Mob:
         self.gravity_step_down = 0.3
         self.mob_rect = pygame.Rect(self.mob_location[0], self.mob_location[1], self.mob_image.get_width(),
                                     self.mob_image.get_height())
-        self.test_rect = pygame.Rect(500, 100, 100, 50)
         self.air_time = 0
         self.action_dist = 20
+        self.full_hp = 50
+        self.hp = 50
+        self.alive = True
+
 
     def handle_mob(self, tiles, display, player_rect_x, player_rect_y, camera):
         self.drawing( display,  camera)
+        self.health_mob(display, camera)
         self.define_velocity_mob(player_rect_x, player_rect_y)
         self.placement_mob(tiles)
 
@@ -60,30 +66,53 @@ class Mob:
 
     def define_velocity_mob(self, player_rect_x, player_rect_y):
         if abs(player_rect_x - self.mob_rect.x) < 300:
-            if player_rect_x - self.treshhold > self.mob_rect.x:
+            if player_rect_x - self.difficulty > self.mob_rect.x:
                 self.velocity[0] = self.step_x / 2
                 self.moving_right = True
                 self.moving_left = False
-            if player_rect_x + self.treshhold < self.mob_rect.x:
+            if player_rect_x + self.difficulty < self.mob_rect.x:
                 self.velocity[0] = -self.step_x / 2
                 self.moving_left = True
                 self.moving_right = False
             # y - axis
-            if abs(player_rect_y - self.mob_rect.y) > 100 + self.treshhold:
+            if abs(player_rect_y - self.mob_rect.y) > 100 + self.difficulty:
                 self.velocity[1] = -self.step_y / 2
                 if abs(player_rect_y - self.mob_rect.y) == 100 :
                     self.velocity[1] = 0
-            if abs(player_rect_y - self.mob_rect.y) < 100 - self.treshhold:
+            if abs(player_rect_y - self.mob_rect.y) < 100 - self.difficulty:
                 self.velocity[1] = +self.step_y / 2
                 if abs(player_rect_y - self.mob_rect.y) == 100:
                     self.velocity[1] = 0
 
-    def health_mob(self, event, display, camera):
-        self.red = pygame.Rect(500, 50, 50, 10)
-        self.green = pygame.Rect(500, 50, 50, 10)
-        if (event.pos[0] - self.mob_rect.x) ** 2 + (event.pos[1] - self.mob_rect.y) ** 2 < 10:
-            display.blit(self.red, (500 - camera[0], 50 - camera[1]))
-    
+    def health_mob(self, display, camera_mob):
+        self.red = pygame.Rect(self.mob_rect.x- camera_mob[0]- 10, self.mob_rect.y-camera_mob[1] - 10, self.full_hp, 5)
+        self.green = pygame.Rect(self.mob_rect.x - camera_mob[0] - 10, self.mob_rect.y-camera_mob[1]- 10, self.hp, 5)
+        pygame.draw.rect(display, RED, self.red)
+        pygame.draw.rect(display, GREEN, self.green)
+
+    def hit_mob(self, event, camera):
+        a = self.hp
+        if (self.mob_rect.x - camera[0] - event.pos[0] + self.mob_image.get_width() / 2) ** 2 + (
+                self.mob_rect.y - camera[1] - event.pos[1] + self.mob_image.get_height() / 2) ** 2 < 30:
+            while self.hp > 0:
+                self.hp -= 10
+            if self.hp == 0 and a!= 0 :
+                self.hp  =  a  - 10
+            if a ==0:
+                self.alive =  False
+
+    # def beat_player(self, player):
+    #     if (self.mob_rect.x - player.player_rect.x )**2  + (self.mob_rect.y - player.player_rect.y )**2 < 300:
+    #         player.hp-=
+
+
+    # def death_mob(self):
+    #     if not self.alive:
+
+
+
+
+
     def drawing(self, display, camera_speed):
         if self.moving_right:
             display.blit(pygame.transform.flip(self.mob_image, True, False),
