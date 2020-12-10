@@ -36,6 +36,10 @@ class Player:
         self.stone = Inventory(pygame.image.load('pictures/inventory/stone.png'), 6, self.inventory_size, self.inventory_location, '3')
         self.labelFont = pygame.font.SysFont('Italic', 20*int(self.inventory_size))
 
+        self.full_hp = 100
+        self.hp = 100
+        self.alive = True
+
     def handle_player(self, tiles, display, camera_speed):
         self.drawing(display, camera_speed)
         self.inventory(display)

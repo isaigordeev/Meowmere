@@ -9,7 +9,7 @@ BROWN = (125,75,0)
 GREY  = (150,150,150)
 RED = (255, 0, 0)
 BLACK = (0, 0, 0)
-
+GREEN = (0,255,0)
 
 class Map(GameObject):
     def __init__(self):
