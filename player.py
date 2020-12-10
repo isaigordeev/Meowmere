@@ -39,10 +39,14 @@ class Player:
         self.full_hp = 100
         self.hp = 100
         self.alive = True
+        self.workshop_is_shown = False
+        self.workshop_rect = pygame.Rect(WINDOW_SIZE[0] - self.inventory_location[0] - self.player_image.get_width() * self.inventory_size, self.inventory_location[1],
+                                           self.player_image.get_width() * self.inventory_size,
+                                          self.player_image.get_width() * self.inventory_size)
 
     def handle_player(self, tiles, display, camera_speed):
         self.drawing(display, camera_speed)
-        self.inventory(display)
+        self.inventory_and_workshop(display)
         self.define_velocity()
         self.placement(tiles)
         self.gravitation()
@@ -176,8 +180,10 @@ class Player:
                                      TILE_SIZE_y))
 
 
-    def inventory(self, display):
+    def inventory_and_workshop(self, display):
         pygame.draw.rect(display, (GREY), self.inventory_rect)
+        if self.workshop_is_shown:
+            pygame.draw.rect(display, GREY, self.workshop_rect)
         self.ground.object_inventory_show(display)
         self.grass.object_inventory_show(display)
         self.stone.object_inventory_show(display)
@@ -194,6 +200,19 @@ class Player:
             self.ground.object_item_show(display, object_number, self.labelFont)
             self.stone.object_item_show(display, object_number, self.labelFont)
             self.grass.object_item_show(display, object_number, self.labelFont)
+
+    def inventory_item_movement(self, event, object):
+        if (self.inventory_location[0] + (( object.object_number - 1) * self.player_image.get_width() + self.player_image.get_width() + 14) * self.inventory_size -
+             event.pos[0])**2 + (( self.inventory_location[1] + self.player_image.get_height() / 2 - 11) * self.inventory_size - event.pos[1])**2 < 150 *self.inventory_size:
+            print('adwadw')
+
+    def workshop(self, event):
+        if event.key == K_e:
+            if not self.workshop_is_shown:
+                self.workshop_is_shown = True
+            else: self.workshop_is_shown = False
+
+
 
     def choice_item(self, event):
         if event.key == K_1:

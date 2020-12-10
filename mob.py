@@ -23,9 +23,10 @@ class Mob:
                                     self.mob_image.get_height())
         self.air_time = 0
         self.action_dist = 20
-        self.full_hp = 50
+        self.full_hp = 100
         self.hp = self.full_hp
         self.hp_indicator = 50
+        self.full_hp_indicator = self.hp_indicator
         self.heat_hand = 10
         self.alive = True
 
@@ -86,7 +87,7 @@ class Mob:
                     self.velocity[1] = 0
 
     def health_mob(self, display, camera_mob):
-        self.red = pygame.Rect(self.mob_rect.x - camera_mob[0] - 10, self.mob_rect.y - camera_mob[1] - 10, self.full_hp,
+        self.red = pygame.Rect(self.mob_rect.x - camera_mob[0] - 10, self.mob_rect.y - camera_mob[1] - 10, self.full_hp_indicator,
                                5)
         self.green = pygame.Rect(self.mob_rect.x - camera_mob[0] - 10, self.mob_rect.y - camera_mob[1] - 10,
                                  self.hp_indicator, 5)
@@ -103,7 +104,7 @@ class Mob:
                 self.hp_indicator -= (self.hp_indicator*self.heat_hand / self.full_hp)
             if self.hp == 0 and a != 0:
                 self.hp = a - self.heat_hand
-                self.hp_indicator = b - (self.hp_indicator*self.heat_hand / self.full_hp)
+                self.hp_indicator = b - (self.full_hp_indicator*self.heat_hand / self.full_hp)
             if a == 0:
                 self.alive = False
 

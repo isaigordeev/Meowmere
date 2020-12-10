@@ -36,6 +36,7 @@ while True:
         if event.type == KEYDOWN:
             Tanya.is_moving_down(event)
             Tanya.choice_item(event)
+            Tanya.workshop(event)
         if event.type == KEYUP:
             Tanya.is_moving_up(event)
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -43,9 +44,7 @@ while True:
                 Tanya.destroy(World.tile_surface, event, World.game_map, TILE_SIZE_x=World.TILE_SIZE_x,
                               TILE_SIZE_y=World.TILE_SIZE_y, camera=Camera.scroll_speed)
                 Max.hit_mob(event, Camera.scroll_speed)
-                print((Max.mob_rect.x - Camera.scroll_speed[0] - event.pos[0] + Max.mob_image.get_width() / 2) ** 2 + (
-                Max.mob_rect.y - Camera.scroll_speed[1] - event.pos[1] + Max.mob_image.get_height() / 2) ** 2 < 30)
-                print(Max.alive)
+                Tanya.inventory_item_movement(event, Tanya.ground)
             if event.button == 3:
                 Tanya.build(World.tile_surface, event, World.game_map, TILE_SIZE_x=World.TILE_SIZE_x,
                               TILE_SIZE_y=World.TILE_SIZE_y, camera=Camera.scroll_speed)
