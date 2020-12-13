@@ -1,6 +1,7 @@
 from game_map import *
 from player import *
 from camera import *
+from music import *
 from mob import *
 clock = pygame.time.Clock()
 pygame.init()
@@ -13,21 +14,23 @@ Ed = Mob([25, 50], 3)
 World = Map()
 Camera_mob = Camera()
 Camera = Camera()
+Music = Music()
 World.map_file_reading('map_seed')
+
+Music.music()
 
 while True:
     World.display.fill(BACKGROUND_COLOR)
 
     Camera.moving_cam(Tanya.player_rect.x, Tanya.player_rect.y)
+    pygame.draw.rect(World.display, (BROWN), pygame.Rect(0 - Camera.scroll_speed[0],
+                                                         175 - Camera.scroll_speed[1], 1000, 1000))  # cavern background style
     Max.handle_mob(World.tile_surface, World.display, Tanya.player_rect.x, Tanya.player_rect.y, Camera.scroll_speed)
     Camera_mob.moving_cam(Max.mob_rect.x, Max.mob_rect.y)
-    pygame.draw.rect(World.display, (BROWN), pygame.Rect(0 - Camera.scroll_speed[0]
-                                                         , 175 - Camera.scroll_speed[1], 1000, 1000))  # cavern background style
 
     World.building(Camera.scroll_speed)
 
     Tanya.handle_player(World.tile_surface, World.display, Camera.scroll_speed)
-
 
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -42,13 +45,12 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 Tanya.destroy(World.tile_surface, event, World.game_map, TILE_SIZE_x=World.TILE_SIZE_x,
-                              TILE_SIZE_y=World.TILE_SIZE_y, camera=Camera.scroll_speed)
+                              TILE_SIZE_y = World.TILE_SIZE_y, camera=Camera.scroll_speed)
                 Max.hit_mob(event, Camera.scroll_speed)
                 Tanya.inventory_item_movement(event, Tanya.ground)
             if event.button == 3:
                 Tanya.build(World.tile_surface, event, World.game_map, TILE_SIZE_x=World.TILE_SIZE_x,
-                              TILE_SIZE_y=World.TILE_SIZE_y, camera=Camera.scroll_speed)
-
+                              TILE_SIZE_y = World.TILE_SIZE_y, camera=Camera.scroll_speed)
 
     World.screen.set_alpha(None)
     World.screen.blit(pygame.transform.scale(World.display, WINDOW_SIZE), (0, 0))
