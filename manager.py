@@ -2,6 +2,7 @@ from game_map import *
 from player import *
 from camera import *
 from mob import *
+from music import *
 clock = pygame.time.Clock()
 pygame.init()
 
@@ -13,7 +14,10 @@ Ed = Mob([25, 50], 3)
 World = Map()
 Camera_mob = Camera()
 Camera = Camera()
+Music = Music()
 World.map_file_reading('map_seed')
+
+Music.music()
 
 while True:
     World.display.fill(BACKGROUND_COLOR)
