@@ -2,7 +2,9 @@ import pygame, sys
 from pygame.locals import *
 from game_map import GREY, WINDOW_SIZE, RED
 from inventory import *
+
 pygame.font.init()
+
 
 class Player:
     def __init__(self, player_location):
@@ -14,10 +16,10 @@ class Player:
         self.moving_down = False
         self.velocity = [0, 0]
         self.step_x = 5
-        self.step_y = -15
+        self.step_y = -5
         self.player_location = player_location
         self.player_y_gravitation = 0
-        self.gravity_step_down = 0.3
+        self.gravity_step_down = 0.5
         self.player_rect = pygame.Rect(self.player_location[0], self.player_location[1], self.player_image.get_width(),
                                        self.player_image.get_height())
         self.air_time = 0
@@ -31,18 +33,23 @@ class Player:
                                           self.player_image.get_width() * self.inventory_size)
         self.num = 1
 
-        self.ground = Inventory(pygame.image.load('pictures/inventory/ground2.png'), 4, self.inventory_size, self.inventory_location, '2')
-        self.grass = Inventory(pygame.image.load('pictures/inventory/ground1.png'), 5, self.inventory_size, self.inventory_location, '1')
-        self.stone = Inventory(pygame.image.load('pictures/inventory/stone.png'), 6, self.inventory_size, self.inventory_location, '3')
-        self.labelFont = pygame.font.SysFont('Italic', 20*int(self.inventory_size))
+        self.ground = Inventory(pygame.image.load('pictures/inventory/ground2.png'), 4, self.inventory_size,
+                                self.inventory_location, '2')
+        self.grass = Inventory(pygame.image.load('pictures/inventory/ground1.png'), 5, self.inventory_size,
+                               self.inventory_location, '1')
+        self.stone = Inventory(pygame.image.load('pictures/inventory/stone.png'), 6, self.inventory_size,
+                               self.inventory_location, '3')
+        self.labelFont = pygame.font.SysFont('Italic', 20 * int(self.inventory_size))
 
         self.full_hp = 100
         self.hp = 100
         self.alive = True
         self.workshop_is_shown = False
-        self.workshop_rect = pygame.Rect(WINDOW_SIZE[0] - self.inventory_location[0] - self.player_image.get_width() * self.inventory_size, self.inventory_location[1],
-                                           self.player_image.get_width() * self.inventory_size,
-                                          self.player_image.get_width() * self.inventory_size)
+        self.workshop_rect = pygame.Rect(self.inventory_location[0],
+                                         self.inventory_location[1] + 35 * self.inventory_size,
+                                         self.player_image.get_width() * self.inventory_size,
+                                         self.player_image.get_width() * self.inventory_size)
+        self.mouse = ()
 
     def handle_player(self, tiles, display, camera_speed):
         self.drawing(display, camera_speed)
@@ -57,19 +64,16 @@ class Player:
         if event.key == K_a:
             self.moving_left = True
         if event.key == K_SPACE:
-            self.velocity[1] = 7
+            # self.velocity[1] = 7
             if self.air_time < 6:
                 self.player_y_gravitation = self.step_y
 
     def is_moving_up(self, event):
         if event.key == K_d:
             self.moving_right = False
-            self.velocity[0] = 0
         if event.key == K_a:
             self.moving_left = False
-            self.velocity[0] = 0
-        if event.key == K_SPACE:
-            self.velocity[1] = 1
+
 
     def placement(self, tiles):
         self.collision_types = {'top': False, 'bottom': False, 'right': False, 'left': False}
@@ -101,17 +105,18 @@ class Player:
         return hit_list
 
     def define_velocity(self):
-        if self.moving_right == True:
-            self.velocity[0] = self.step_x
-        if self.moving_left == True:
-            self.velocity[0] = -self.step_x
+        self.velocity = [0, 0]
+        if self.moving_right:
+            self.velocity[0] += self.step_x
+        if self.moving_left:
+            self.velocity[0] += -self.step_x
         self.velocity[1] += self.player_y_gravitation
-        self.player_y_gravitation = self.gravity_step_down
+        self.player_y_gravitation += self.gravity_step_down
         if self.player_y_gravitation > 3:
             self.player_y_gravitation = 3
 
     def gravitation(self):
-        if self.collision_types['bottom'] == True:
+        if self.collision_types['bottom']:
             self.air_time = 0
             self.player_y_gravitation = 0
         else:
@@ -165,7 +170,6 @@ class Player:
                             self.stone.object_item = c + 1
                         game_map[int(tile.y / TILE_SIZE_y)][int(tile.x / TILE_SIZE_x)] = '0'
 
-
     def build(self, tiles, event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera: []):
         self.ground.inventory_define()
         self.grass.inventory_define()
@@ -180,10 +184,21 @@ class Player:
                                      TILE_SIZE_y))
 
 
+    def define_workshop(self, object):
+        if ((self.workshop_rect.x + 14) * self.inventory_size - self.mouse[0]) ** 2 + (
+                (self.workshop_rect.y + self.player_image.get_height() / 2 - 11) * self.inventory_size - self.mouse[
+            1]) ** 2 < 75 * self.inventory_size:
+            object.object_workshop = True
+            object.object_workshop_item += 1
+
     def inventory_and_workshop(self, display):
         pygame.draw.rect(display, (GREY), self.inventory_rect)
         if self.workshop_is_shown:
             pygame.draw.rect(display, GREY, self.workshop_rect)
+            self.define_workshop(self.ground)
+        if self.ground.object_workshop:
+            self.ground.object_workshop_show(display)
+            self.ground.object_item_workshop_show(display, self.labelFont)
         self.ground.object_inventory_show(display)
         self.grass.object_inventory_show(display)
         self.stone.object_inventory_show(display)
@@ -192,27 +207,39 @@ class Player:
             self.inventory_location[1],
             self.player_image.get_width() * self.inventory_size,
             self.player_image.get_width() * self.inventory_size), 3)
-        for object_number in range(self.inventory_number_items+1):
+
+        for object_number in range(self.inventory_number_items + 1):
             display.blit(self.labelFont.render(str(object_number), False, BLACK), (
                 self.inventory_location[0] + ((
-                        object_number - 1) * self.player_image.get_width()+3) * self.inventory_size,
-                self.inventory_location[1]+1 * self.inventory_size))
+                                                      object_number - 1) * self.player_image.get_width() + 3) * self.inventory_size,
+                self.inventory_location[1] + 1 * self.inventory_size))
             self.ground.object_item_show(display, object_number, self.labelFont)
             self.stone.object_item_show(display, object_number, self.labelFont)
             self.grass.object_item_show(display, object_number, self.labelFont)
 
     def inventory_item_movement(self, event, object):
-        if (self.inventory_location[0] + (( object.object_number - 1) * self.player_image.get_width() + self.player_image.get_width() + 14) * self.inventory_size -
-             event.pos[0])**2 + (( self.inventory_location[1] + self.player_image.get_height() / 2 - 11) * self.inventory_size - event.pos[1])**2 < 150 *self.inventory_size:
-            print('adwadw')
+        if object.object_inventory:
+            if (self.inventory_location[0] + (
+                    (object.object_number - 1) * self.player_image.get_width() + 14) * self.inventory_size -
+                event.pos[0]) ** 2 + (
+                    (self.inventory_location[1] + self.player_image.get_height() / 2 - 11) * self.inventory_size -
+                    event.pos[1]) ** 2 < 75 * self.inventory_size:
+                object.moving = True
 
     def workshop(self, event):
         if event.key == K_e:
             if not self.workshop_is_shown:
                 self.workshop_is_shown = True
-            else: self.workshop_is_shown = False
+            else:
+                self.workshop_is_shown = False
 
-
+    def object_inventory_moving(self, event, display, object):
+        if object.object_inventory and object.moving:
+            display.blit(pygame.transform.scale(object.object, (
+                int(object.object.get_width() * self.inventory_size),
+                int(object.object.get_height() * self.inventory_size))), (
+                             event.pos[0],
+                             event.pos[1]))
 
     def choice_item(self, event):
         if event.key == K_1:
@@ -227,3 +254,5 @@ class Player:
             self.num = 5
         if event.key == K_6:
             self.num = 6
+
+

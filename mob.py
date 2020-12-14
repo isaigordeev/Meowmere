@@ -23,11 +23,11 @@ class Mob:
                                     self.mob_image.get_height())
         self.air_time = 0
         self.action_dist = 20
-        self.full_hp = 100
+        self.full_hp = 10000
         self.hp = self.full_hp
         self.hp_indicator = 50
         self.full_hp_indicator = self.hp_indicator
-        self.heat_hand = 10
+        self.heat_hand = 1
         self.alive = True
 
     def handle_mob(self, tiles, display, player_rect_x, player_rect_y, camera):
