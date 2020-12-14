@@ -43,8 +43,10 @@ for i in range(0,14,1):
     string.append(strin)
     strin = 0
 
-
-
+f = open('map_seed.txt', 'w')
+for i in range(0,14,1):
+    f.write(string[i] + '\n')
+f.close()
 
 
 print(blocks)
