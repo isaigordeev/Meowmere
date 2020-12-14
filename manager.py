@@ -6,7 +6,7 @@ clock = pygame.time.Clock()
 pygame.init()
 
 
-Tanya = Player([200, 0])
+Tanya = Player([500, 0])
 Isay = Mob([0, 0], 1)
 Max = Mob([50, 0], 2)
 Ed = Mob([25, 50], 3)
@@ -14,15 +14,6 @@ World = Map()
 Camera_mob = Camera()
 Camera = Camera()
 World.map_file_reading('map_seed')
-Tanya.player_image.convert()
-Tanya.player_image.set_colorkey((255, 255, 255))
-
-
-def update_fps():
-    fps = str(int(clock.get_fps()))
-    fps_text = Tanya.labelFont.render(fps, 1, pygame.Color(RED))
-    return fps_text
-
 
 while True:
     World.display.fill(BACKGROUND_COLOR)
@@ -36,7 +27,6 @@ while True:
     World.building(Camera.scroll_speed)
 
     Tanya.handle_player(World.tile_surface, World.display, Camera.scroll_speed)
-    World.display.blit(update_fps(), (300, 0))
 
 
     for event in pygame.event.get():
@@ -58,12 +48,9 @@ while True:
             if event.button == 3:
                 Tanya.build(World.tile_surface, event, World.game_map, TILE_SIZE_x=World.TILE_SIZE_x,
                               TILE_SIZE_y=World.TILE_SIZE_y, camera=Camera.scroll_speed)
-        if event.type == pygame.MOUSEMOTION:
-            Tanya.mouse = event.pos
-            if event.buttons[0]:
-                Tanya.object_inventory_moving(event, World.display, Tanya.ground)
+
+
     World.screen.set_alpha(None)
-    World.screen.blit(World.display, (0, 0))
-    # pygame.display.flip()
+    World.screen.blit(pygame.transform.scale(World.display, WINDOW_SIZE), (0, 0))
     pygame.display.update()
     clock.tick(60)
