@@ -1,10 +1,13 @@
+
 from game_map import *
 from player import *
 from camera import *
 from mob import *
 from music import *
+import random_map 
 clock = pygame.time.Clock()
 pygame.init()
+
 
 
 Tanya = Player([500, 0])
@@ -15,6 +18,7 @@ World = Map()
 Camera_mob = Camera()
 Camera = Camera()
 Music = Music()
+random_map.create_map()
 World.map_file_reading('map_seed')
 
 Music.music()
