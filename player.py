@@ -186,8 +186,7 @@ class Player:
 
     def define_workshop(self, object):
         if ((self.workshop_rect.x + 14) * self.inventory_size - self.mouse[0]) ** 2 + (
-                (self.workshop_rect.y + self.player_image.get_height() / 2 - 11) * self.inventory_size - self.mouse[
-            1]) ** 2 < 75 * self.inventory_size:
+                (self.workshop_rect.y + self.player_image.get_height() / 2 - 11) * self.inventory_size - self.mouse[1]) ** 2 < 75 * self.inventory_size:
             object.object_workshop = True
             object.object_workshop_item += 1
 
