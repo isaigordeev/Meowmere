@@ -250,16 +250,16 @@ class Player:
                              event.pos[1]))
 
     def craftshop(self):
-        if self.workshop_identificator == '1':
+        if self.workshop_identificator == self.ground.identificator:
             if self.ground.object_workshop_item >= 3:
-                self.grass.object_item +=1
-                # self.ground.object_workshop_item -= 3
-            # else:
-            #     self.ground.object_item += self.ground.object_workshop_item
-            #     self.ground.object_workshop = False
-            #     self.ground.object_workshop_item = 0
+                while self.ground.object_workshop_item >= 3:
+                    self.grass.object_item += 1
+                    self.ground.object_workshop_item -= 3
+            self.ground.object_item += self.ground.object_workshop_item
+            self.ground.object_workshop = False
+            self.ground.object_workshop_item = 0
         if self.workshop_identificator == 3:
-            if self.ground.object_workshop_item > 20:
+            if self.ground.object_workshop_item >= 20:
                 self.grass.object_item +=1
 
     def choice_item(self, event):
