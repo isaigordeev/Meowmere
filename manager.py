@@ -61,8 +61,11 @@ while True:
             if event.button == 1:
                 Tanya.destroy(World.tile_surface, event, World.game_map, TILE_SIZE_x=World.TILE_SIZE_x,
                               TILE_SIZE_y=World.TILE_SIZE_y, camera=Camera.scroll_speed)
-                Max.hit_mob(event, Camera.scroll_speed)
+                Max.hit_mob(event, Camera.scroll_speed, Tanya.num, Tanya.sword.object_inventory)
                 Tanya.inventory_item_movement(event, Tanya.ground)
+                Tanya.inventory_item_movement(event, Tanya.grass)
+                Tanya.inventory_item_movement(event, Tanya.stone)
+
             if event.button == 3:
                 Tanya.build(World.tile_surface, event, World.game_map, TILE_SIZE_x=World.TILE_SIZE_x,
                               TILE_SIZE_y=World.TILE_SIZE_y, camera=Camera.scroll_speed)
@@ -70,8 +73,15 @@ while True:
             Tanya.mouse = event.pos
             if event.buttons[0]:
                 Tanya.object_inventory_moving(event, World.display, Tanya.ground)
+                Tanya.object_inventory_moving(event, World.display, Tanya.grass)
+                Tanya.object_inventory_moving(event, World.display, Tanya.stone)
+
             if not event.buttons[0]:
                 Tanya.ground.moving = False
+                Tanya.grass.moving = False
+                Tanya.stone.moving = False
+
+
 
     World.screen.set_alpha(None)
     World.screen.blit(World.display, (0, 0))

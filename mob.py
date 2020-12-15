@@ -28,6 +28,7 @@ class Mob:
         self.hp_indicator = 50
         self.full_hp_indicator = self.hp_indicator
         self.heat_hand = 1
+        self.heat_sword = 100
         self.alive = True
 
     def handle_mob(self, tiles, display, player_rect_x, player_rect_y, camera):
@@ -94,7 +95,7 @@ class Mob:
         pygame.draw.rect(display, RED, self.red)
         pygame.draw.rect(display, GREEN, self.green)
 
-    def hit_mob(self, event, camera):
+    def hit_mob(self, event, camera, num, is_sword):
         a = self.hp
         b = self.hp_indicator
         if (self.mob_rect.x - camera[0] - event.pos[0] + self.mob_image.get_width() / 2) ** 2 + (
@@ -103,17 +104,23 @@ class Mob:
                 self.hp -= self.heat_hand
                 self.hp_indicator -= (self.hp_indicator*self.heat_hand / self.full_hp)
             if self.hp == 0 and a != 0:
-                self.hp = a - self.heat_hand
-                self.hp_indicator = b - (self.full_hp_indicator*self.heat_hand / self.full_hp)
+                if num == 3:
+                    self.hp = a - self.heat_hand
+                    self.hp_indicator = b - (self.full_hp_indicator*self.heat_hand / self.full_hp)
+                if num == 1:
+                    if is_sword:
+                        self.hp = a - self.heat_sword
+                        self.hp_indicator = b - (self.full_hp_indicator * self.heat_sword / self.full_hp)
             if a == 0:
                 self.alive = False
 
     # def beat_player(self, player):
     #     if (self.mob_rect.x - player.player_rect.x )**2  + (self.mob_rect.y - player.player_rect.y )**2 < 300:
-    #         player.hp-=
-
+    #         player.hp -= 1
+    #
     # def death_mob(self):
     #     if not self.alive:
+    #         del self.mob_image
 
     def drawing(self, display, camera_speed):
         if self.moving_right:
