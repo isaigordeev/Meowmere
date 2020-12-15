@@ -50,6 +50,7 @@ class Player:
                                          self.player_image.get_width() * self.inventory_size,
                                          self.player_image.get_width() * self.inventory_size)
         self.mouse = ()
+        self.workshop_identificator = 0
 
     def handle_player(self, tiles, display, camera_speed):
         self.drawing(display, camera_speed)
@@ -57,6 +58,7 @@ class Player:
         self.define_velocity()
         self.placement(tiles)
         self.gravitation()
+        self.craftshop()
 
     def is_moving_down(self, event):
         if event.key == K_d:
@@ -185,19 +187,26 @@ class Player:
 
 
     def define_workshop(self, object):
-        if ((self.workshop_rect.x + 14) * self.inventory_size - self.mouse[0]) ** 2 + (
-                (self.workshop_rect.y + self.player_image.get_height() / 2 - 11) * self.inventory_size - self.mouse[1]) ** 2 < 75 * self.inventory_size:
-            object.object_workshop = True
-            object.object_workshop_item += 1
+        if object.moving:
+            if ((self.workshop_rect.x + 14) * self.inventory_size - self.mouse[0]) ** 2 + (
+                    (self.workshop_rect.y + self.player_image.get_height() / 2 - 11) * self.inventory_size - self.mouse[1]) ** 2 < 75 * self.inventory_size:
+                object.object_workshop = True
+                self.workshop_identificator = object.identificator
+                while object.object_item > 0:
+                    object.object_workshop_item += 1
+                    object.object_item -= 1
+
 
     def inventory_and_workshop(self, display):
         pygame.draw.rect(display, (GREY), self.inventory_rect)
         if self.workshop_is_shown:
             pygame.draw.rect(display, GREY, self.workshop_rect)
             self.define_workshop(self.ground)
-        if self.ground.object_workshop:
-            self.ground.object_workshop_show(display)
-            self.ground.object_item_workshop_show(display, self.labelFont)
+            if self.ground.object_workshop:
+                self.ground.object_workshop_show(display)
+                self.ground.object_item_workshop_show(display, self.labelFont)
+            if not self.ground.object_workshop:
+                pygame.draw.rect(display, GREY, self.workshop_rect)
         self.ground.object_inventory_show(display)
         self.grass.object_inventory_show(display)
         self.stone.object_inventory_show(display)
@@ -239,6 +248,19 @@ class Player:
                 int(object.object.get_height() * self.inventory_size))), (
                              event.pos[0],
                              event.pos[1]))
+
+    def craftshop(self):
+        if self.workshop_identificator == '1':
+            if self.ground.object_workshop_item >= 3:
+                self.grass.object_item +=1
+                # self.ground.object_workshop_item -= 3
+            # else:
+            #     self.ground.object_item += self.ground.object_workshop_item
+            #     self.ground.object_workshop = False
+            #     self.ground.object_workshop_item = 0
+        if self.workshop_identificator == 3:
+            if self.ground.object_workshop_item > 20:
+                self.grass.object_item +=1
 
     def choice_item(self, event):
         if event.key == K_1:

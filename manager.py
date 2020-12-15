@@ -70,6 +70,9 @@ while True:
             Tanya.mouse = event.pos
             if event.buttons[0]:
                 Tanya.object_inventory_moving(event, World.display, Tanya.ground)
+            if not event.buttons[0]:
+                Tanya.ground.moving = False
+
     World.screen.set_alpha(None)
     World.screen.blit(World.display, (0, 0))
     # pygame.display.flip()
