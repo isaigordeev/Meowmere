@@ -65,7 +65,7 @@ while True:
                 Tanya.inventory_item_movement(event, Tanya.ground)
                 Tanya.inventory_item_movement(event, Tanya.grass)
                 Tanya.inventory_item_movement(event, Tanya.stone)
-
+                print(Max.alive)
             if event.button == 3:
                 Tanya.build(World.tile_surface, event, World.game_map, TILE_SIZE_x=World.TILE_SIZE_x,
                               TILE_SIZE_y=World.TILE_SIZE_y, camera=Camera.scroll_speed)

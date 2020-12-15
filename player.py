@@ -40,7 +40,7 @@ class Player:
         self.stone = Inventory(pygame.image.load('pictures/inventory/stone.png'), 6, self.inventory_size,
                                self.inventory_location, '3')
         self.sword = Inventory(pygame.image.load('pictures/inventory/sword.png'), 1, self.inventory_size, self.inventory_location, '4')
-
+        self.hand = Inventory(pygame.image.load('pictures/inventory/hands.jpg'), 3, self.inventory_size, self.inventory_location, '5')
         self.labelFont = pygame.font.SysFont('Italic', 20 * int(self.inventory_size))
 
         self.full_hp = 100
@@ -242,6 +242,9 @@ class Player:
         self.grass.object_inventory_show(display)
         self.stone.object_inventory_show(display)
         self.sword.object_inventory_show(display)
+        self.hand.object_item = 1
+        self.hand.object_inventory_show(display)
+
         pygame.draw.rect(display, RED, pygame.Rect(
             self.inventory_location[0] + (self.num - 1) * self.player_image.get_width() * self.inventory_size,
             self.inventory_location[1],
@@ -302,9 +305,14 @@ class Player:
             self.grass.object_workshop_item = 0
 
         if self.workshop_identificator == self.stone.identificator:
-            if self.stone.object_workshop_item >= 3:
-                self.sword.object_item = 1
-                self.sword.inventory_define()
+            if self.stone.object_workshop_item >= 5:
+                while self.stone.object_workshop_item >= 5:
+                    self.sword.object_item = 1
+                    self.sword.inventory_define()
+                    self.stone.object_workshop_item -= 5
+            self.stone.object_item += self.stone.object_workshop_item
+            self.stone.object_workshop = False
+            self.stone.object_workshop_item = 0
 
     def choice_item(self, event):
         if event.key == K_1:

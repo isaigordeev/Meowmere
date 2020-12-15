@@ -28,7 +28,7 @@ class Mob:
         self.hp_indicator = 50
         self.full_hp_indicator = self.hp_indicator
         self.heat_hand = 1
-        self.heat_sword = 100
+        self.heat_sword = 1000
         self.alive = True
 
     def handle_mob(self, tiles, display, player_rect_x, player_rect_y, camera):
@@ -118,9 +118,9 @@ class Mob:
     #     if (self.mob_rect.x - player.player_rect.x )**2  + (self.mob_rect.y - player.player_rect.y )**2 < 300:
     #         player.hp -= 1
     #
-    # def death_mob(self):
-    #     if not self.alive:
-    #         del self.mob_image
+    def death_mob(self):
+        if not self.alive:
+            del self.mob_image
 
     def drawing(self, display, camera_speed):
         if self.moving_right:
