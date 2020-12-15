@@ -1,4 +1,5 @@
-import pygame, sys
+import pygame
+import sys
 from pygame.locals import *
 from game_map import GREY, WINDOW_SIZE, RED
 from inventory import *
@@ -29,8 +30,9 @@ class Player:
         self.inventory_number_items = 6
         self.inventory_size = 1
         self.inventory_rect = pygame.Rect(self.inventory_location[0], self.inventory_location[1],
-                                          self.inventory_number_items * self.player_image.get_width() * self.inventory_size,
-                                          self.player_image.get_width() * self.inventory_size)
+                                          self.inventory_number_items * self.player_image.get_width() *
+                                          self.inventory_size, self.player_image.get_width() *
+                                          self.inventory_size)
         self.num = 1
 
         self.ground = Inventory(pygame.image.load('pictures/inventory/ground2.png'), 4, self.inventory_size,
@@ -39,8 +41,10 @@ class Player:
                                self.inventory_location, '1')
         self.stone = Inventory(pygame.image.load('pictures/inventory/stone.png'), 6, self.inventory_size,
                                self.inventory_location, '3')
-        self.sword = Inventory(pygame.image.load('pictures/inventory/sword.png'), 1, self.inventory_size, self.inventory_location, '4')
-        self.hand = Inventory(pygame.image.load('pictures/inventory/hands.jpg'), 3, self.inventory_size, self.inventory_location, '5')
+        self.sword = Inventory(pygame.image.load('pictures/inventory/sword.png'), 1,
+                               self.inventory_size, self.inventory_location, '4')
+        self.hand = Inventory(pygame.image.load('pictures/inventory/hands.jpg'), 3,
+                              self.inventory_size, self.inventory_location, '5')
         self.labelFont = pygame.font.SysFont('Italic', 20 * int(self.inventory_size))
 
         self.full_hp = 100
@@ -77,7 +81,6 @@ class Player:
             self.moving_right = False
         if event.key == K_a:
             self.moving_left = False
-
 
     def placement(self, tiles):
         self.collision_types = {'top': False, 'bottom': False, 'right': False, 'left': False}
@@ -132,29 +135,33 @@ class Player:
             display.blit(pygame.transform.flip(self.player_image, False, False),
                          (self.player_rect.x - camera_speed[0], self.player_rect.y - camera_speed[1]))
             if self.sword.object_inventory and self.num == 1:
-                display.blit(pygame.transform.flip(self.sword.object, False, False), (self.player_rect.x - camera_speed[0]+self.sword.object.get_width(), self.player_rect.y - camera_speed[1]))
+                display.blit(pygame.transform.flip(self.sword.object, False, False),
+                             (self.player_rect.x - camera_speed[0] + self.sword.object.get_width(),
+                              self.player_rect.y - camera_speed[1]))
             self.last_side = 0
         elif self.moving_left:
             display.blit(pygame.transform.flip(self.player_image, True, False),
                          (self.player_rect.x - camera_speed[0], self.player_rect.y - camera_speed[1]))
             if self.sword.object_inventory and self.num == 1:
-                display.blit(pygame.transform.flip(self.sword.object, True, False), (self.player_rect.x - camera_speed[0]-self.sword.object.get_width(), self.player_rect.y - camera_speed[1]))
+                display.blit(pygame.transform.flip(self.sword.object, True, False),
+                             (self.player_rect.x - camera_speed[0] - self.sword.object.get_width(),
+                              self.player_rect.y - camera_speed[1]))
             self.last_side = 1
         elif not self.moving_right and not self.moving_left:
             if self.last_side == 0:
                 display.blit(pygame.transform.flip(self.player_image, False, False),
                              (self.player_rect.x - camera_speed[0], self.player_rect.y - camera_speed[1]))
                 if self.sword.object_inventory and self.num == 1:
-                    display.blit(pygame.transform.flip(self.sword.object, False, False), (
-                    self.player_rect.x - camera_speed[0] + self.sword.object.get_width(),
-                    self.player_rect.y - camera_speed[1]))
+                    display.blit(pygame.transform.flip(self.sword.object, False, False),
+                                 (self.player_rect.x - camera_speed[0] + self.sword.object.get_width(),
+                                  self.player_rect.y - camera_speed[1]))
             elif self.last_side == 1:
                 display.blit(pygame.transform.flip(self.player_image, True, False),
                              (self.player_rect.x - camera_speed[0], self.player_rect.y - camera_speed[1]))
                 if self.sword.object_inventory and self.num == 1:
-                    display.blit(pygame.transform.flip(self.sword.object, True, False), (
-                    self.player_rect.x - camera_speed[0] - self.sword.object.get_width(),
-                    self.player_rect.y - camera_speed[1]))
+                    display.blit(pygame.transform.flip(self.sword.object, True, False),
+                                 (self.player_rect.x - camera_speed[0] - self.sword.object.get_width(),
+                                  self.player_rect.y - camera_speed[1]))
 
     def destroy(self, tiles, event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera: []):
         a = self.ground.object_item
@@ -199,21 +206,20 @@ class Player:
                                      int((event.pos[0] + camera[0]) / TILE_SIZE_x) * TILE_SIZE_y, TILE_SIZE_x,
                                      TILE_SIZE_y))
 
-
     def define_workshop(self, object):
         if object.moving:
             if ((self.workshop_rect.x + 14) * self.inventory_size - self.mouse[0]) ** 2 + (
-                    (self.workshop_rect.y + self.player_image.get_height() / 2 - 11) * self.inventory_size - self.mouse[1]) ** 2 < 75 * self.inventory_size:
+                    (self.workshop_rect.y + self.player_image.get_height() / 2 - 11) * self.inventory_size -
+                    self.mouse[1]) ** 2 < 75 * self.inventory_size:
                 object.object_workshop = True
                 self.workshop_identificator = object.identificator
                 while object.object_item > 0:
                     object.object_workshop_item += 1
                     object.object_item -= 1
 
-
     def inventory_and_workshop(self, display):
         pygame.draw.rect(display, (GREY), self.inventory_rect)
-        
+
         if self.workshop_is_shown:
             pygame.draw.rect(display, GREY, self.workshop_rect)
             self.define_workshop(self.ground)
@@ -225,13 +231,13 @@ class Player:
                 self.ground.object_item_workshop_show(display, self.labelFont)
             if not self.ground.object_workshop:
                 pygame.draw.rect(display, GREY, self.workshop_rect)
-                
+
             if self.stone.object_workshop:
                 self.stone.object_workshop_show(display)
                 self.stone.object_item_workshop_show(display, self.labelFont)
             if not self.stone.object_workshop:
                 pygame.draw.rect(display, GREY, self.workshop_rect)
-                
+
             if self.grass.object_workshop:
                 self.grass.object_workshop_show(display)
                 self.grass.object_item_workshop_show(display, self.labelFont)
@@ -253,8 +259,8 @@ class Player:
 
         for object_number in range(self.inventory_number_items + 1):
             display.blit(self.labelFont.render(str(object_number), False, BLACK), (
-                self.inventory_location[0] + ((
-                                                      object_number - 1) * self.player_image.get_width() + 3) * self.inventory_size,
+                self.inventory_location[0] +
+                ((object_number - 1) * self.player_image.get_width() + 3) * self.inventory_size,
                 self.inventory_location[1] + 1 * self.inventory_size))
 
             self.ground.object_item_show(display, object_number, self.labelFont)
@@ -305,11 +311,11 @@ class Player:
             self.grass.object_workshop_item = 0
 
         if self.workshop_identificator == self.stone.identificator:
-            if self.stone.object_workshop_item >= 5:
-                while self.stone.object_workshop_item >= 5:
+            if self.stone.object_workshop_item >= 10:
+                while self.stone.object_workshop_item >= 10:
                     self.sword.object_item = 1
                     self.sword.inventory_define()
-                    self.stone.object_workshop_item -= 5
+                    self.stone.object_workshop_item -= 10
             self.stone.object_item += self.stone.object_workshop_item
             self.stone.object_workshop = False
             self.stone.object_workshop_item = 0
@@ -327,5 +333,3 @@ class Player:
             self.num = 5
         if event.key == K_6:
             self.num = 6
-
-
