@@ -78,8 +78,8 @@ while not finished:
                 # cavern background style
                 pygame.draw.rect(World.display, BROWN, pygame.Rect(0 - Camera.scroll_speed[0],
                                                                    175 - Camera.scroll_speed[1], 1000, 1000))
-                # Max.handle_mob(World.tile_surface, World.display, Tanya.player_rect.x, Tanya.player_rect.y,
-                #                Camera.scroll_speed)
+                Max.handle_mob(World.tile_surface, World.display, Tanya.player_rect.x, Tanya.player_rect.y,
+                               Camera.scroll_speed)
                 Camera_mob.moving_cam(Max.mob_rect.x, Max.mob_rect.y)
 
                 World.building(Camera.scroll_speed)
@@ -123,6 +123,6 @@ while not finished:
     World.screen.set_alpha(None)
     World.display.blit(World.menu_display, (0, 0))
     World.screen.blit(World.display, (0, 0))
-    # pygame.display.flip()
+    pygame.display.flip()
     pygame.display.update()
     clock.tick(60)

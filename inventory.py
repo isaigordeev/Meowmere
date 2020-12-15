@@ -21,6 +21,7 @@ class Inventory:
                                          self.object.get_width() * self.inventory_size)
         self.object_workshop = False
         self.object_workshop_item = 0
+
     def inventory_define(self):
         if self.object_item > 0:
             self.object_inventory = True
@@ -55,7 +56,6 @@ class Inventory:
                          self.workshop_rect.y
                 ))
 
-
     def inventory_build(self, event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera, num):
         if num == self.object_number:
             if self.object_inventory:
@@ -72,5 +72,3 @@ class Inventory:
                 int(self.object.get_height() * self.inventory_size))), (
                              mouse[0],
                              mouse[1]))
-
-

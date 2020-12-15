@@ -1,4 +1,6 @@
 from game_map import WINDOW_SIZE
+
+
 class Camera:
     def __init__(self):
         self.scroll_speed = [0, 0]
