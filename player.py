@@ -2,10 +2,10 @@ import pygame
 import sys
 from pygame.locals import *
 from game_map import GREY, WINDOW_SIZE, RED
+from music import *
 from inventory import *
 
 pygame.font.init()
-
 
 class Player:
     def __init__(self, player_location):
@@ -57,6 +57,7 @@ class Player:
                                          self.player_image.get_width() * self.inventory_size)
         self.mouse = ()
         self.workshop_identificator = 0
+        self.music = Music()
 
     def handle_player(self, tiles, display, camera_speed):
         self.drawing(display, camera_speed)
@@ -173,6 +174,8 @@ class Player:
                     self.player_rect.y - camera[1] - event.pos[1] + TILE_SIZE_y) ** 2 <= self.action_dist:
                 if (tile.x + radius / 2 - camera[0] - event.pos[0]) ** 2 + (
                         tile.y + radius / 2 - camera[1] - event.pos[1]) ** 2 <= radius ** 2:
+                    # self.music.break_music()
+                    # self.music.main_music()
                     tiles.remove(tile)
                     if game_map[int((event.pos[1] + camera[1]) / TILE_SIZE_y)][
                         int((event.pos[0] + camera[0]) / TILE_SIZE_x)] == self.ground.identificator:
@@ -290,6 +293,21 @@ class Player:
                 int(object.object.get_height() * self.inventory_size))), (
                              event.pos[0],
                              event.pos[1]))
+
+    def drop_item(self, event, object):
+        if event.key == K_q:
+            object.object_item = 0
+            self.define_workshop(object)
+    def drop_items(self, event):
+        if self.num == 4:
+            self.drop_item(event, self.ground)
+        if self.num == 5:
+            self.drop_item(event, self.grass)
+        if self.num == 6:
+            self.drop_item(event, self.stone)
+        if self.num == 1:
+            self.drop_item(event, self.sword)
+        
 
     def craftshop(self):
         if self.workshop_identificator == self.ground.identificator:

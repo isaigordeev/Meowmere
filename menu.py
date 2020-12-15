@@ -42,6 +42,7 @@ class Menu:
         else:
             pass
 
+
 def menu_event(options, display):
     for option in options:
         if option.rect.collidepoint(pygame.mouse.get_pos()):
@@ -56,5 +57,3 @@ def menu_event(options, display):
             option.clicked = False
         option.draw()
         option.new_window(display)
-
-

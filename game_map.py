@@ -13,7 +13,6 @@ GREEN = (0, 255, 0)
 WHITE = (255, 255, 255)
 
 
-
 class Map(GameObject):
     def __init__(self):
         self.tile_surface = []
@@ -26,6 +25,7 @@ class Map(GameObject):
         self.TILE_SIZE_x = self.grass.get_width()
         self.TILE_SIZE_y = self.grass.get_height()
         self.display = pygame.Surface(WINDOW_SIZE)
+        self.menu_display = pygame.Surface(WINDOW_SIZE)
 
     def generation(self):
         for i in range(int(WINDOW_SIZE[1] / self.grass.get_height()) + 1):

@@ -17,7 +17,6 @@ Ed = Mob([25, 50], 3)
 World = Map()
 Camera_mob = Camera()
 Camera = Camera()
-Music = Music()
 random_map.create_map()
 World.map_file_reading('map_seed')
 Tanya.player_image.convert()
@@ -27,6 +26,7 @@ condition = 0
 
 menu_font = pygame.font.Font(None, 60)
 
+Tanya.music.main_music()
 
 def update_fps():
     """Writes current fps on the screen"""
@@ -35,13 +35,15 @@ def update_fps():
     return fps_text
 
 
-options = [Menu("START GAME", (WINDOW_SIZE[1] // 3 + 30, WINDOW_SIZE[0] // 2 - 110), World.display, menu_font),
+options_start = [Menu("START GAME", (WINDOW_SIZE[1] // 3 + 30, WINDOW_SIZE[0] // 2 - 110), World.display, menu_font),
            Menu("EXIT", (2 * WINDOW_SIZE[1] // 5 + 80, 2 * WINDOW_SIZE[0] // 3 - 80), World.display, menu_font)]
-menu = pygame.image.load("pictures/terraria.jpeg").convert()
-menu = pygame.transform.scale(menu, (WINDOW_SIZE[0], WINDOW_SIZE[1]))
+options_continue = [Menu("CONTINUE GAME", (WINDOW_SIZE[1] // 3 - 20, WINDOW_SIZE[0] // 2 - 110), World.display, menu_font),
+           Menu("EXIT", (2 * WINDOW_SIZE[1] // 5 + 80, 2 * WINDOW_SIZE[0] // 3 - 80), World.display, menu_font)]
+# menu = pygame.image.load("pictures/terraria.jpeg").convert()
 
 
-Music.music()
+menu = pygame.transform.scale(pygame.image.load("pictures/stone.png").convert(), (WINDOW_SIZE[0], WINDOW_SIZE[1]))
+
 
 while not finished:
     for event in pygame.event.get():
@@ -50,24 +52,34 @@ while not finished:
         else:
             if condition == 0:
                 World.display.blit(menu, (0, 0))
-                for option in options:
+                for option in options_start:
                     option.draw()
-                text = menu_event(options, World.display)
+                text = menu_event(options_start, World.display)
                 if text == "START GAME":
                     condition = 1
                 elif text == "EXIT":
                     finished = True
                     pygame.quit()
                     sys.exit()
-            else:
+            if condition == 2:
+                for option in options_continue:
+                    option.draw()
+                text = menu_event(options_continue, World.display)
+                if text == "CONTINUE GAME":
+                    condition = 1
+                elif text == "EXIT":
+                    finished = True
+                    pygame.quit()
+                    sys.exit()
+            elif condition == 1:
                 World.display.fill(BACKGROUND_COLOR)
 
                 Camera.moving_cam(Tanya.player_rect.x, Tanya.player_rect.y)
                 # cavern background style
                 pygame.draw.rect(World.display, BROWN, pygame.Rect(0 - Camera.scroll_speed[0],
                                                                    175 - Camera.scroll_speed[1], 1000, 1000))
-                Max.handle_mob(World.tile_surface, World.display, Tanya.player_rect.x, Tanya.player_rect.y,
-                               Camera.scroll_speed)
+                # Max.handle_mob(World.tile_surface, World.display, Tanya.player_rect.x, Tanya.player_rect.y,
+                #                Camera.scroll_speed)
                 Camera_mob.moving_cam(Max.mob_rect.x, Max.mob_rect.y)
 
                 World.building(Camera.scroll_speed)
@@ -79,6 +91,9 @@ while not finished:
             Tanya.is_moving_down(event)
             Tanya.choice_item(event)
             Tanya.workshop(event)
+            Tanya.drop_items(event)
+            if event.key == K_ESCAPE:
+                condition = 2
         if event.type == KEYUP:
             Tanya.is_moving_up(event)
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -106,6 +121,7 @@ while not finished:
                 Tanya.stone.moving = False
 
     World.screen.set_alpha(None)
+    World.display.blit(World.menu_display, (0, 0))
     World.screen.blit(World.display, (0, 0))
     # pygame.display.flip()
     pygame.display.update()
