@@ -5,11 +5,14 @@ pygame.display.set_caption('under_Terraria')
 WINDOW_SIZE = (600, 400)
 
 BACKGROUND_COLOR = (146, 244, 255)
-BROWN = (125,75,0)
-GREY  = (150,150,150)
+BROWN = (125, 75, 0)
+GREY = (150, 150, 150)
 RED = (255, 0, 0)
 BLACK = (0, 0, 0)
-GREEN = (0,255,0)
+GREEN = (0, 255, 0)
+WHITE = (255, 255, 255)
+
+
 
 class Map(GameObject):
     def __init__(self):
@@ -17,13 +20,12 @@ class Map(GameObject):
         self.game_map = [[]]
         self.screen = pygame.display.set_mode(WINDOW_SIZE, DOUBLEBUF|HWSURFACE, 32)
         self.grass = pygame.image.load('pictures/ground1.png').convert()
-        self.ground =  pygame.image.load('pictures/ground2.png').convert()
-        self.stone =  pygame.image.load('pictures/stone.png').convert()
+        self.ground = pygame.image.load('pictures/ground2.png').convert()
+        self.stone = pygame.image.load('pictures/stone.png').convert()
         self.bedrock = pygame.image.load('pictures/bedrock.png').convert()
         self.TILE_SIZE_x = self.grass.get_width()
         self.TILE_SIZE_y = self.grass.get_height()
         self.display = pygame.Surface(WINDOW_SIZE)
-
 
     def generation(self):
         for i in range(int(WINDOW_SIZE[1] / self.grass.get_height()) + 1):
@@ -34,10 +36,9 @@ class Map(GameObject):
                 else:
                     self.game_map[i].append('1')
 
-
-
     def print_map_seed(self):
         print(*self.game_map, sep='\n')
+
     def print_map_seed_by(self):
         for i in range(int(WINDOW_SIZE[1] / self.grass.get_height()) + 1):
                 print(*self.game_map[i])
@@ -71,5 +72,3 @@ class Map(GameObject):
         self.data = self.data.split('\n')
         for row in self.data:
             self.game_map.append(list(row))
-
-
