@@ -1,9 +1,9 @@
-
 from game_map import *
 from player import *
 from camera import *
 from mob import *
 from music import *
+from menu import *
 import random_map 
 clock = pygame.time.Clock()
 pygame.init()
@@ -22,35 +22,59 @@ random_map.create_map()
 World.map_file_reading('map_seed')
 Tanya.player_image.convert()
 Tanya.player_image.set_colorkey((255, 255, 255))
+finished = False
+condition = 0
+
+menu_font = pygame.font.Font(None, 60)
 
 
 def update_fps():
+    """Writes current fps on the screen"""
     fps = str(int(clock.get_fps()))
     fps_text = Tanya.labelFont.render(fps, 1, pygame.Color(RED))
     return fps_text
 
 
+options = [Menu("START GAME", (WINDOW_SIZE[1] // 3 + 30, WINDOW_SIZE[0] // 2 - 110), World.display, menu_font),
+           Menu("EXIT", (2 * WINDOW_SIZE[1] // 5 + 80, 2 * WINDOW_SIZE[0] // 3 - 80), World.display, menu_font)]
+menu = pygame.image.load("pictures/terraria.jpeg").convert()
+menu = pygame.transform.scale(menu, (WINDOW_SIZE[0], WINDOW_SIZE[1]))
+
+
 Music.music()
 
-while True:
-    World.display.fill(BACKGROUND_COLOR)
-
-    Camera.moving_cam(Tanya.player_rect.x, Tanya.player_rect.y)
-    Max.handle_mob(World.tile_surface, World.display, Tanya.player_rect.x, Tanya.player_rect.y, Camera.scroll_speed)
-    Camera_mob.moving_cam(Max.mob_rect.x, Max.mob_rect.y)
-    pygame.draw.rect(World.display, (BROWN), pygame.Rect(0 - Camera.scroll_speed[0]
-                                                         , 175 - Camera.scroll_speed[1], 1000, 1000))  # cavern background style
-
-    World.building(Camera.scroll_speed)
-
-    Tanya.handle_player(World.tile_surface, World.display, Camera.scroll_speed)
-    World.display.blit(update_fps(), (300, 0))
-
-
+while not finished:
     for event in pygame.event.get():
         if event.type == QUIT:
-            pygame.quit()
-            sys.exit()
+            finished = True
+        else:
+            if condition == 0:
+                World.display.blit(menu, (0, 0))
+                for option in options:
+                    option.draw()
+                text = menu_event(options, World.display)
+                if text == "START GAME":
+                    condition = 1
+                elif text == "EXIT":
+                    finished = True
+                    pygame.quit()
+                    sys.exit()
+            else:
+                World.display.fill(BACKGROUND_COLOR)
+
+                Camera.moving_cam(Tanya.player_rect.x, Tanya.player_rect.y)
+                # cavern background style
+                pygame.draw.rect(World.display, BROWN, pygame.Rect(0 - Camera.scroll_speed[0],
+                                                                   175 - Camera.scroll_speed[1], 1000, 1000))
+                Max.handle_mob(World.tile_surface, World.display, Tanya.player_rect.x, Tanya.player_rect.y,
+                               Camera.scroll_speed)
+                Camera_mob.moving_cam(Max.mob_rect.x, Max.mob_rect.y)
+
+                World.building(Camera.scroll_speed)
+
+                Tanya.handle_player(World.tile_surface, World.display, Camera.scroll_speed)
+                World.display.blit(update_fps(), (300, 0))
+
         if event.type == KEYDOWN:
             Tanya.is_moving_down(event)
             Tanya.choice_item(event)
@@ -80,8 +104,6 @@ while True:
                 Tanya.ground.moving = False
                 Tanya.grass.moving = False
                 Tanya.stone.moving = False
-
-
 
     World.screen.set_alpha(None)
     World.screen.blit(World.display, (0, 0))
