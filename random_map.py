@@ -65,21 +65,3 @@ def create_map():
     for i in range(0, 14, 1):
         f.write(string[i] + '\n')
     f.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
