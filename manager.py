@@ -1,18 +1,24 @@
+
 from game_map import *
 from player import *
 from camera import *
 from mob import *
+from music import *
+import random_map 
 clock = pygame.time.Clock()
 pygame.init()
 
 
 Tanya = Player([200, 0])
+
 Isay = Mob([0, 0], 1)
 Max = Mob([50, 0], 2)
 Ed = Mob([25, 50], 3)
 World = Map()
 Camera_mob = Camera()
 Camera = Camera()
+Music = Music()
+random_map.create_map()
 World.map_file_reading('map_seed')
 Tanya.player_image.convert()
 Tanya.player_image.set_colorkey((255, 255, 255))
@@ -23,6 +29,8 @@ def update_fps():
     fps_text = Tanya.labelFont.render(fps, 1, pygame.Color(RED))
     return fps_text
 
+
+Music.music()
 
 while True:
     World.display.fill(BACKGROUND_COLOR)
