@@ -1,3 +1,5 @@
+import pygame as pygame
+
 from game_object import *
 
 pygame.display.set_caption('under_Terraria')
