@@ -58,6 +58,7 @@ class Player:
         self.mouse = ()
         self.workshop_identificator = 0
         self.music = Music()
+        self.config_items = ''
 
     def handle_player(self, tiles, display, camera_speed):
         self.drawing(display, camera_speed)
@@ -337,6 +338,35 @@ class Player:
             self.stone.object_item += self.stone.object_workshop_item
             self.stone.object_workshop = False
             self.stone.object_workshop_item = 0
+
+    def config_reading(self, path):
+        f = open(path+'.txt')
+        self.data = f.read()
+        f.close()
+        self.data = self.data.split('\n')
+        for row in self.data:
+            self.config_items.append(list(row))
+
+    def give_config_items(self):
+        self.sword.object_item = self.config_items[0]
+        self.ground.object_item = self.config_items[1]
+        self.grass.object_item = self.config_items[2]
+        self.stone.object_item = self.config_items[3]
+
+    def config_writing(self, path):
+        f = open(path+'.txt')
+        # self.config_items += str(self.sword.object_item)
+        # self.config_items +=(str(self.ground.object_item))
+        # self.config_items+=(str(self.grass.object_item))
+        # self.config_items+=(str(self.stone.object_item))
+        self.config_items.append(self.sword.object_item)
+        self.config_items.append(self.ground.object_item)
+        self.config_items.append(self.grass.object_item)
+        self.config_items.append(self.stone.object_item)
+        for item in self.config_items:
+            f.write(item)
+        f.close()
+
 
     def choice_item(self, event):
         if event.key == K_1:

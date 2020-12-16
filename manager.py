@@ -76,8 +76,8 @@ while not finished:
         World.display.blit(biom, (0, -150))
         Camera.moving_cam(Tanya.player_rect.x, Tanya.player_rect.y)
         # cavern background style
-        pygame.draw.rect(World.display, ICE_COLOR, pygame.Rect(0 - Camera.scroll_speed[0],
-                                                               175 - Camera.scroll_speed[1], 730, 200))
+        pygame.draw.rect(World.display, ICE_COLOR, pygame.Rect(int(0 - Camera.scroll_speed[0]),
+                                                               int(175 - Camera.scroll_speed[1]), 725, 200))
         Max.handle_mob(World.tile_surface, World.display, Tanya.player_rect.x, Tanya.player_rect.y,
                        Camera.scroll_speed)
         Camera_mob.moving_cam(Max.mob_rect.x, Max.mob_rect.y)
@@ -90,7 +90,7 @@ while not finished:
     for event in pygame.event.get():
         if event.type == QUIT:
             finished = True
-
+            Tanya.config_writing('config')
         if event.type == KEYDOWN:
             Tanya.is_moving_down(event)
             Tanya.choice_item(event)
