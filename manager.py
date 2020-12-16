@@ -28,6 +28,7 @@ menu_font = pygame.font.Font(None, 60)
 
 Tanya.music.main_music()
 
+
 def update_fps():
     """Writes current fps on the screen"""
     fps = str(int(clock.get_fps()))
@@ -36,9 +37,9 @@ def update_fps():
 
 
 options_start = [Menu("START GAME", ((WINDOW_SIZE[1] - 250) // 2, (WINDOW_SIZE[0]) // 3), World.display, menu_font),
-           Menu("EXIT", ((WINDOW_SIZE[1] - 110) // 2, (WINDOW_SIZE[0]) // 2.3), World.display, menu_font)]
-options_continue = [Menu("CONTINUE GAME", ((WINDOW_SIZE[1] - 250) // 2, (WINDOW_SIZE[0]) // 3), World.display, menu_font),
-           Menu("EXIT", ((WINDOW_SIZE[1] - 110) // 2, (WINDOW_SIZE[0]) // 2.3), World.display, menu_font)]
+                 Menu("EXIT", ((WINDOW_SIZE[1] - 110) // 2, (WINDOW_SIZE[0]) // 2.3), World.display, menu_font)]
+options_continue = [Menu("CONTINUE", ((WINDOW_SIZE[1] - 200) // 2, (WINDOW_SIZE[0]) // 3), World.display, menu_font),
+                    Menu("EXIT", ((WINDOW_SIZE[1] - 110) // 2, (WINDOW_SIZE[0]) // 2.3), World.display, menu_font)]
 
 menu = pygame.transform.scale(pygame.image.load("pictures/winter_terraria.jpg").convert(),
                               (WINDOW_SIZE[0], WINDOW_SIZE[1]))
@@ -63,7 +64,7 @@ while not finished:
         for option in options_continue:
             option.draw()
         text = menu_event(options_continue, World.display)
-        if text == "CONTINUE GAME":
+        if text == "CONTINUE":
             condition = 1
         elif text == "EXIT":
             finished = True
@@ -72,11 +73,11 @@ while not finished:
 
     elif condition == 1:
         World.display.fill(ICE_COLOR)
-        World.display.blit(biom, (0,-150))
+        World.display.blit(biom, (0, -150))
         Camera.moving_cam(Tanya.player_rect.x, Tanya.player_rect.y)
         # cavern background style
         pygame.draw.rect(World.display, ICE_COLOR, pygame.Rect(0 - Camera.scroll_speed[0],
-                                                           175 - Camera.scroll_speed[1], 1000, 1000))
+                                                               175 - Camera.scroll_speed[1], 730, 200))
         Max.handle_mob(World.tile_surface, World.display, Tanya.player_rect.x, Tanya.player_rect.y,
                        Camera.scroll_speed)
         Camera_mob.moving_cam(Max.mob_rect.x, Max.mob_rect.y)
@@ -112,7 +113,7 @@ while not finished:
                 print(Max.alive)
             if event.button == 3:
                 Tanya.build(World.tile_surface, event, World.game_map, TILE_SIZE_x=World.TILE_SIZE_x,
-                              TILE_SIZE_y=World.TILE_SIZE_y, camera=Camera.scroll_speed)
+                            TILE_SIZE_y=World.TILE_SIZE_y, camera=Camera.scroll_speed)
 
         if event.type == pygame.MOUSEMOTION:
             Tanya.mouse = event.pos
