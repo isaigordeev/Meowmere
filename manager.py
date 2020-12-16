@@ -35,57 +35,60 @@ def update_fps():
     return fps_text
 
 
-options_start = [Menu("START GAME", (WINDOW_SIZE[1] // 3 + 30, WINDOW_SIZE[0] // 2 - 110), World.display, menu_font),
-           Menu("EXIT", (2 * WINDOW_SIZE[1] // 5 + 80, 2 * WINDOW_SIZE[0] // 3 - 80), World.display, menu_font)]
-options_continue = [Menu("CONTINUE GAME", (WINDOW_SIZE[1] // 3 - 20, WINDOW_SIZE[0] // 2 - 110), World.display, menu_font),
-           Menu("EXIT", (2 * WINDOW_SIZE[1] // 5 + 80, 2 * WINDOW_SIZE[0] // 3 - 80), World.display, menu_font)]
-# menu = pygame.image.load("pictures/terraria.jpeg").convert()
+options_start = [Menu("START GAME", ((WINDOW_SIZE[1] - 250) // 2, (WINDOW_SIZE[0]) // 3), World.display, menu_font),
+           Menu("EXIT", ((WINDOW_SIZE[1] - 110) // 2, (WINDOW_SIZE[0]) // 2.3), World.display, menu_font)]
+options_continue = [Menu("CONTINUE GAME", ((WINDOW_SIZE[1] - 250) // 2, (WINDOW_SIZE[0]) // 3), World.display, menu_font),
+           Menu("EXIT", ((WINDOW_SIZE[1] - 110) // 2, (WINDOW_SIZE[0]) // 2.3), World.display, menu_font)]
 
-
-menu = pygame.transform.scale(pygame.image.load("pictures/stone.png").convert(), (WINDOW_SIZE[0], WINDOW_SIZE[1]))
-
+menu = pygame.transform.scale(pygame.image.load("pictures/winter_terraria.jpg").convert(),
+                              (WINDOW_SIZE[0], WINDOW_SIZE[1]))
+biom = pygame.transform.scale(pygame.image.load("pictures/biom1.png").convert(),
+                              (WINDOW_SIZE[0], WINDOW_SIZE[1]))
 
 while not finished:
+
+    if condition == 0:
+        World.display.blit(menu, (0, 0))
+        for option in options_start:
+            option.draw()
+        text = menu_event(options_start, World.display)
+        if text == "START GAME":
+            condition = 1
+        elif text == "EXIT":
+            finished = True
+            pygame.quit()
+            sys.exit()
+
+    if condition == 2:
+        for option in options_continue:
+            option.draw()
+        text = menu_event(options_continue, World.display)
+        if text == "CONTINUE GAME":
+            condition = 1
+        elif text == "EXIT":
+            finished = True
+            pygame.quit()
+            sys.exit()
+
+    elif condition == 1:
+        World.display.fill(ICE_COLOR)
+        World.display.blit(biom, (0,-150))
+        Camera.moving_cam(Tanya.player_rect.x, Tanya.player_rect.y)
+        # cavern background style
+        pygame.draw.rect(World.display, ICE_COLOR, pygame.Rect(0 - Camera.scroll_speed[0],
+                                                           175 - Camera.scroll_speed[1], 1000, 1000))
+        Max.handle_mob(World.tile_surface, World.display, Tanya.player_rect.x, Tanya.player_rect.y,
+                       Camera.scroll_speed)
+        Camera_mob.moving_cam(Max.mob_rect.x, Max.mob_rect.y)
+
+        World.building(Camera.scroll_speed)
+
+        Tanya.handle_player(World.tile_surface, World.display, Camera.scroll_speed)
+        World.display.blit(update_fps(), (300, 0))
+
     for event in pygame.event.get():
         if event.type == QUIT:
             finished = True
-        else:
-            if condition == 0:
-                World.display.blit(menu, (0, 0))
-                for option in options_start:
-                    option.draw()
-                text = menu_event(options_start, World.display)
-                if text == "START GAME":
-                    condition = 1
-                elif text == "EXIT":
-                    finished = True
-                    pygame.quit()
-                    sys.exit()
-            if condition == 2:
-                for option in options_continue:
-                    option.draw()
-                text = menu_event(options_continue, World.display)
-                if text == "CONTINUE GAME":
-                    condition = 1
-                elif text == "EXIT":
-                    finished = True
-                    pygame.quit()
-                    sys.exit()
-            elif condition == 1:
-                World.display.fill(BACKGROUND_COLOR)
-
-                Camera.moving_cam(Tanya.player_rect.x, Tanya.player_rect.y)
-                # cavern background style
-                pygame.draw.rect(World.display, BROWN, pygame.Rect(0 - Camera.scroll_speed[0],
-                                                                   175 - Camera.scroll_speed[1], 1000, 1000))
-                Max.handle_mob(World.tile_surface, World.display, Tanya.player_rect.x, Tanya.player_rect.y,
-                               Camera.scroll_speed)
-                Camera_mob.moving_cam(Max.mob_rect.x, Max.mob_rect.y)
-
-                World.building(Camera.scroll_speed)
-
-                Tanya.handle_player(World.tile_surface, World.display, Camera.scroll_speed)
-                World.display.blit(update_fps(), (300, 0))
 
         if event.type == KEYDOWN:
             Tanya.is_moving_down(event)
@@ -94,8 +97,10 @@ while not finished:
             Tanya.drop_items(event)
             if event.key == K_ESCAPE:
                 condition = 2
+
         if event.type == KEYUP:
             Tanya.is_moving_up(event)
+
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 Tanya.destroy(World.tile_surface, event, World.game_map, TILE_SIZE_x=World.TILE_SIZE_x,
@@ -108,6 +113,7 @@ while not finished:
             if event.button == 3:
                 Tanya.build(World.tile_surface, event, World.game_map, TILE_SIZE_x=World.TILE_SIZE_x,
                               TILE_SIZE_y=World.TILE_SIZE_y, camera=Camera.scroll_speed)
+
         if event.type == pygame.MOUSEMOTION:
             Tanya.mouse = event.pos
             if event.buttons[0]:
@@ -123,6 +129,6 @@ while not finished:
     World.screen.set_alpha(None)
     World.display.blit(World.menu_display, (0, 0))
     World.screen.blit(World.display, (0, 0))
-    pygame.display.flip()
+    # pygame.display.flip()
     pygame.display.update()
-    clock.tick(60)
+    clock.tick(120)

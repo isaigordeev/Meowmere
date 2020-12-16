@@ -2,7 +2,7 @@ from game_object import *
 
 pygame.display.set_caption('under_Terraria')
 
-WINDOW_SIZE = (600, 400)
+WINDOW_SIZE = (720, 713)
 
 BACKGROUND_COLOR = (146, 244, 255)
 BROWN = (125, 75, 0)
@@ -11,22 +11,23 @@ RED = (255, 0, 0)
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
 WHITE = (255, 255, 255)
-
+ICE_COLOR = (140, 169, 200)
 
 class Map(GameObject):
     def __init__(self):
         self.tile_surface = []
         self.game_map = [[]]
         self.screen = pygame.display.set_mode(WINDOW_SIZE, DOUBLEBUF|HWSURFACE, 32)
-        self.grass = pygame.image.load('pictures/ground1.png').convert()
+        self.grass = pygame.image.load('pictures/snow.jpg').convert()
         self.ground = pygame.image.load('pictures/ground2.png').convert()
         self.stone = pygame.image.load('pictures/stone.png').convert()
         self.bedrock = pygame.image.load('pictures/bedrock.png').convert()
         self.TILE_SIZE_x = self.grass.get_width()
         self.TILE_SIZE_y = self.grass.get_height()
-        self.display = pygame.Surface(WINDOW_SIZE)
+        self.display = pygame.Surface((WINDOW_SIZE[0]//2,WINDOW_SIZE[1]//2))
         self.menu_display = pygame.Surface(WINDOW_SIZE)
-
+        self.display = pygame.transform.scale(self.display,
+                              (WINDOW_SIZE[0], WINDOW_SIZE[1]))
     def generation(self):
         for i in range(int(WINDOW_SIZE[1] / self.grass.get_height()) + 1):
             self.game_map.append([])

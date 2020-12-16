@@ -9,7 +9,7 @@ pygame.font.init()
 
 class Player:
     def __init__(self, player_location):
-        self.player_image = pygame.image.load('pictures/tanya_right.png')
+        self.player_image = pygame.image.load('pictures/santa.png')
         self.moving_right = False
         self.last_side = 0
         self.moving_left = False
@@ -27,23 +27,23 @@ class Player:
         self.action_dist = 8000
 
         self.inventory_location = [10, 10]
-        self.inventory_number_items = 6
-        self.inventory_size = 1
+        self.inventory_number_items = 5
+        self.inventory_size = 1.3
         self.inventory_rect = pygame.Rect(self.inventory_location[0], self.inventory_location[1],
                                           self.inventory_number_items * self.player_image.get_width() *
                                           self.inventory_size, self.player_image.get_width() *
                                           self.inventory_size)
         self.num = 1
 
-        self.ground = Inventory(pygame.image.load('pictures/inventory/ground2.png'), 4, self.inventory_size,
+        self.ground = Inventory(pygame.image.load('pictures/inventory/ground2.png'), 3, self.inventory_size,
                                 self.inventory_location, '2')
-        self.grass = Inventory(pygame.image.load('pictures/inventory/ground1.png'), 5, self.inventory_size,
+        self.grass = Inventory(pygame.image.load('pictures/inventory/snow.jpg'), 4, self.inventory_size,
                                self.inventory_location, '1')
-        self.stone = Inventory(pygame.image.load('pictures/inventory/stone.png'), 6, self.inventory_size,
+        self.stone = Inventory(pygame.image.load('pictures/inventory/stone.png'), 5, self.inventory_size,
                                self.inventory_location, '3')
         self.sword = Inventory(pygame.image.load('pictures/inventory/sword.png'), 1,
                                self.inventory_size, self.inventory_location, '4')
-        self.hand = Inventory(pygame.image.load('pictures/inventory/hands.jpg'), 3,
+        self.hand = Inventory(pygame.image.load('pictures/inventory/hands.jpg'), 2,
                               self.inventory_size, self.inventory_location, '5')
         self.labelFont = pygame.font.SysFont('Italic', 20 * int(self.inventory_size))
 
