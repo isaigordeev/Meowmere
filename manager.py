@@ -4,6 +4,7 @@ from camera import *
 from mob import *
 from music import *
 from menu import *
+from music import *
 import random_map 
 clock = pygame.time.Clock()
 pygame.init()
@@ -17,6 +18,7 @@ Ed = Mob([25, 50], 3)
 World = Map()
 Camera_mob = Camera()
 Camera = Camera()
+Music = Music()
 random_map.create_map()
 World.map_file_reading('map_seed')
 Tanya.player_image.convert()
@@ -26,8 +28,8 @@ condition = 0
 
 menu_font = pygame.font.Font(None, 60)
 
-Tanya.music.main_music()
-
+#Tanya.music.main_music(condition)
+Music.main_music(condition)
 
 def update_fps():
     """Writes current fps on the screen"""

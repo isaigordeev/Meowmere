@@ -57,7 +57,7 @@ class Player:
                                          self.player_image.get_width() * self.inventory_size)
         self.mouse = ()
         self.workshop_identificator = 0
-        self.music = Music()
+        #self.music = Music()
         self.config_items = ''
 
     def handle_player(self, tiles, display, camera_speed):
