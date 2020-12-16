@@ -36,8 +36,8 @@ def update_fps():
     return fps_text
 
 
-options_start = [Menu("START GAME", ((WINDOW_SIZE[1] - 250) // 2, (WINDOW_SIZE[0]) // 3), World.display, menu_font),
-                 Menu("EXIT", ((WINDOW_SIZE[1] - 110) // 2, (WINDOW_SIZE[0]) // 2.3), World.display, menu_font)]
+options_start = [Menu("START GAME", ((WINDOW_SIZE[1] - 250) // 2, (WINDOW_SIZE[0]) // 3), World.menu_display, menu_font),
+                 Menu("EXIT", ((WINDOW_SIZE[1] - 110) // 2, (WINDOW_SIZE[0]) // 2.3), World.menu_display, menu_font)]
 options_continue = [Menu("CONTINUE", ((WINDOW_SIZE[1] - 200) // 2, (WINDOW_SIZE[0]) // 3), World.display, menu_font),
                     Menu("EXIT", ((WINDOW_SIZE[1] - 110) // 2, (WINDOW_SIZE[0]) // 2.3), World.display, menu_font)]
 
@@ -45,11 +45,13 @@ menu = pygame.transform.scale(pygame.image.load("pictures/winter_terraria.jpg").
                               (WINDOW_SIZE[0], WINDOW_SIZE[1]))
 biom = pygame.transform.scale(pygame.image.load("pictures/biom1.png").convert(),
                               (WINDOW_SIZE[0], WINDOW_SIZE[1]))
+World.screen.set_alpha(None)
 
 while not finished:
-
+    World.screen.blit(World.display, (0, 0))
     if condition == 0:
-        World.display.blit(menu, (0, 0))
+        World.display.blit(World.menu_display, (0, 0))
+        World.menu_display.blit(menu, (0, 0))
         for option in options_start:
             option.draw()
         text = menu_event(options_start, World.display)
@@ -110,7 +112,7 @@ while not finished:
                 Tanya.inventory_item_movement(event, Tanya.ground)
                 Tanya.inventory_item_movement(event, Tanya.grass)
                 Tanya.inventory_item_movement(event, Tanya.stone)
-                print(Max.alive)
+                print(condition)
             if event.button == 3:
                 Tanya.build(World.tile_surface, event, World.game_map, TILE_SIZE_x=World.TILE_SIZE_x,
                             TILE_SIZE_y=World.TILE_SIZE_y, camera=Camera.scroll_speed)
@@ -127,9 +129,7 @@ while not finished:
                 Tanya.grass.moving = False
                 Tanya.stone.moving = False
 
-    World.screen.set_alpha(None)
-    World.display.blit(World.menu_display, (0, 0))
-    World.screen.blit(World.display, (0, 0))
+
     # pygame.display.flip()
     pygame.display.update()
     clock.tick(120)
