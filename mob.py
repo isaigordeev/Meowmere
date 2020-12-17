@@ -7,7 +7,7 @@ from game_map import RED, GREEN, WINDOW_SIZE
 class Mob:
     def __init__(self, mob_location, difficulty):
         self.difficulty = 30 * difficulty
-        self.mob_image = pygame.image.load('pictures/ghost.gif')
+        self.mob_image = pygame.image.load('pictures/ghost2.png')
         self.moving_right = False
         self.last_side = 0
         self.moving_left = False
@@ -31,11 +31,13 @@ class Mob:
         self.heat_sword = 1000
         self.alive = True
 
-    def handle_mob(self, tiles, display, player_rect_x, player_rect_y, camera):
-        self.drawing(display, camera)
-        self.health_mob(display, camera)
+    def handle_mob(self, tiles, display, player_rect_x, player_rect_y, camera, player_sheld):
+        if self.alive:
+            self.drawing(display, camera)
+            self.health_mob(display, camera)
         self.define_velocity_mob(player_rect_x, player_rect_y)
         self.placement_mob(tiles)
+        self.death_mob(player_sheld)
 
     def placement_mob(self, tiles):
         self.collision_types = {'top': False, 'bottom': False, 'right': False, 'left': False}
@@ -100,27 +102,29 @@ class Mob:
         b = self.hp_indicator
         if (self.mob_rect.x - camera[0] - event.pos[0] + self.mob_image.get_width() / 2) ** 2 + (
                 self.mob_rect.y - camera[1] - event.pos[1] + self.mob_image.get_height() / 2) ** 2 < 100:
-            while self.hp > 0:
-                self.hp -= self.heat_hand
-                self.hp_indicator -= (self.hp_indicator*self.heat_hand / self.full_hp)
-            if self.hp == 0 and a != 0:
-                if num == 3:
+            if a > 0:
+                if num == 2:
                     self.hp = a - self.heat_hand
-                    self.hp_indicator = b - (self.full_hp_indicator*self.heat_hand / self.full_hp)
+                    self.hp_indicator = b - (self.full_hp_indicator * self.heat_hand / self.full_hp)
                 if num == 1:
                     if is_sword:
                         self.hp = a - self.heat_sword
                         self.hp_indicator = b - (self.full_hp_indicator * self.heat_sword / self.full_hp)
-            if a == 0:
+                else:
+                    self.hp = a
+            if self.hp_indicator <= 0:
                 self.alive = False
 
     # def beat_player(self, player):
     #     if (self.mob_rect.x - player.player_rect.x )**2  + (self.mob_rect.y - player.player_rect.y )**2 < 300:
     #         player.hp -= 1
-    #
-    def death_mob(self):
+
+    def death_mob(self, player_sheld):
         if not self.alive:
-            del self.mob_image
+            self.mob_image = pygame.image.load('pictures/death_mob.jpg')
+            self.full_hp_indicator = 0
+            self.hp_indicator = 0
+            player_sheld += 1
 
     def drawing(self, display, camera_speed):
         if self.moving_right:

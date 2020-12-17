@@ -27,7 +27,7 @@ class Player:
         self.action_dist = 8000
 
         self.inventory_location = [10, 10]
-        self.inventory_number_items = 5
+        self.inventory_number_items = 6
         self.inventory_size = 1.3
         self.inventory_rect = pygame.Rect(self.inventory_location[0], self.inventory_location[1],
                                           self.inventory_number_items * self.player_image.get_width() *
@@ -43,7 +43,9 @@ class Player:
                                self.inventory_location, '3')
         self.sword = Inventory(pygame.image.load('pictures/inventory/sword.png'), 1,
                                self.inventory_size, self.inventory_location, '4')
-        self.hand = Inventory(pygame.image.load('pictures/inventory/hands.jpg'), 2,
+        self.hand = Inventory(pygame.image.load('pictures/inventory/mitten.png'), 2,
+                              self.inventory_size, self.inventory_location, '5')
+        self.sheld = Inventory(pygame.image.load('pictures/inventory/sheld.png'), 6,
                               self.inventory_size, self.inventory_location, '5')
         self.labelFont = pygame.font.SysFont('Italic', 20 * int(self.inventory_size))
 
@@ -60,9 +62,9 @@ class Player:
         #self.music = Music()
         self.config_items = ''
 
-    def handle_player(self, tiles, display, camera_speed):
+    def handle_player(self, tiles, display, camera_speed, mob_alive):
         self.drawing(display, camera_speed)
-        self.inventory_and_workshop(display)
+        self.inventory_and_workshop(display, mob_alive)
         self.define_velocity()
         self.placement(tiles)
         self.gravitation()
@@ -119,8 +121,12 @@ class Player:
             self.velocity[0] += self.step_x
         if self.moving_left:
             self.velocity[0] += -self.step_x
-        self.velocity[1] += self.player_y_gravitation
-        self.player_y_gravitation += self.gravity_step_down
+        if self.sheld.object_item > 0 and self.num == 6:
+            self.velocity[1] += 2*self.player_y_gravitation
+            self.player_y_gravitation += 0.1*self.gravity_step_down
+        else:
+            self.velocity[1] += self.player_y_gravitation
+            self.player_y_gravitation += self.gravity_step_down
         if self.player_y_gravitation > 3:
             self.player_y_gravitation = 3
 
@@ -140,6 +146,11 @@ class Player:
                 display.blit(pygame.transform.flip(self.sword.object, False, False),
                              (self.player_rect.x - camera_speed[0] + self.sword.object.get_width(),
                               self.player_rect.y - camera_speed[1]))
+
+            if self.sheld.object_inventory and self.num == 6:
+                display.blit(pygame.transform.flip(self.sheld.object, True, False),
+                             (self.player_rect.x - camera_speed[0] ,
+                              self.player_rect.y - camera_speed[1] + self.sheld.object.get_height()*3/5))
             self.last_side = 0
         elif self.moving_left:
             display.blit(pygame.transform.flip(self.player_image, True, False),
@@ -148,6 +159,10 @@ class Player:
                 display.blit(pygame.transform.flip(self.sword.object, True, False),
                              (self.player_rect.x - camera_speed[0] - self.sword.object.get_width(),
                               self.player_rect.y - camera_speed[1]))
+            if self.sheld.object_inventory and self.num == 6:
+                display.blit(pygame.transform.flip(self.sheld.object, False, False),
+                             (self.player_rect.x - camera_speed[0],
+                              self.player_rect.y - camera_speed[1] + self.sheld.object.get_height() * 3 / 5))
             self.last_side = 1
         elif not self.moving_right and not self.moving_left:
             if self.last_side == 0:
@@ -157,6 +172,10 @@ class Player:
                     display.blit(pygame.transform.flip(self.sword.object, False, False),
                                  (self.player_rect.x - camera_speed[0] + self.sword.object.get_width(),
                                   self.player_rect.y - camera_speed[1]))
+                if self.sheld.object_inventory and self.num == 6:
+                    display.blit(pygame.transform.flip(self.sheld.object, True, False),
+                                 (self.player_rect.x - camera_speed[0],
+                                  self.player_rect.y - camera_speed[1] + self.sheld.object.get_height() * 3 / 5))
             elif self.last_side == 1:
                 display.blit(pygame.transform.flip(self.player_image, True, False),
                              (self.player_rect.x - camera_speed[0], self.player_rect.y - camera_speed[1]))
@@ -164,6 +183,10 @@ class Player:
                     display.blit(pygame.transform.flip(self.sword.object, True, False),
                                  (self.player_rect.x - camera_speed[0] - self.sword.object.get_width(),
                                   self.player_rect.y - camera_speed[1]))
+                if self.sheld.object_inventory and self.num == 6:
+                    display.blit(pygame.transform.flip(self.sheld.object, False, False),
+                                 (self.player_rect.x - camera_speed[0],
+                                  self.player_rect.y - camera_speed[1] + self.sheld.object.get_height() * 3 / 5))
 
     def destroy(self, tiles, event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera: []):
         a = self.ground.object_item
@@ -221,7 +244,7 @@ class Player:
                     object.object_workshop_item += 1
                     object.object_item -= 1
 
-    def inventory_and_workshop(self, display):
+    def inventory_and_workshop(self, display, mob_alive):
         pygame.draw.rect(display, (GREY), self.inventory_rect)
 
         if self.workshop_is_shown:
@@ -254,6 +277,9 @@ class Player:
         self.sword.object_inventory_show(display)
         self.hand.object_item = 1
         self.hand.object_inventory_show(display)
+        if not mob_alive:
+            self.sheld.object_item = 1
+            self.sheld.object_inventory_show(display)
 
         pygame.draw.rect(display, RED, pygame.Rect(
             self.inventory_location[0] + (self.num - 1) * self.player_image.get_width() * self.inventory_size,

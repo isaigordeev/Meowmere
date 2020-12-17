@@ -83,12 +83,12 @@ while not finished:
         pygame.draw.rect(World.display, ICE_COLOR, pygame.Rect(int(0 - Camera.scroll_speed[0]),
                                                                int(175 - Camera.scroll_speed[1]), 725, 200))
         Max.handle_mob(World.tile_surface, World.display, Tanya.player_rect.x, Tanya.player_rect.y,
-                       Camera.scroll_speed)
+                       Camera.scroll_speed, Tanya.sheld.object_item)
         Camera_mob.moving_cam(Max.mob_rect.x, Max.mob_rect.y)
 
         World.building(Camera.scroll_speed)
 
-        Tanya.handle_player(World.tile_surface, World.display, Camera.scroll_speed)
+        Tanya.handle_player(World.tile_surface, World.display, Camera.scroll_speed, Max.alive )
         World.display.blit(update_fps(), (300, 0))
 
     for event in pygame.event.get():
@@ -114,7 +114,7 @@ while not finished:
                 Tanya.inventory_item_movement(event, Tanya.ground)
                 Tanya.inventory_item_movement(event, Tanya.grass)
                 Tanya.inventory_item_movement(event, Tanya.stone)
-                print(condition)
+                print(Max.alive)
             if event.button == 3:
                 Tanya.build(World.tile_surface, event, World.game_map, TILE_SIZE_x=World.TILE_SIZE_x,
                             TILE_SIZE_y=World.TILE_SIZE_y, camera=Camera.scroll_speed)
