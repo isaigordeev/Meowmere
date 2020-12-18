@@ -3,6 +3,9 @@ from random import shuffle
 
 
 def create_map():
+    '''
+    Function is responsible for creating a pseudo-random world
+    '''
     blocks = []
     string = []
     index = []

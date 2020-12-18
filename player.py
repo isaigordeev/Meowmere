@@ -8,6 +8,9 @@ from inventory import *
 pygame.font.init()
 
 class Player:
+    '''
+    Class is responsible for actions of the player and its interaction with the inventory, the mob and the internal world
+    '''
     def __init__(self, player_location):
         self.player_image = pygame.image.load('pictures/santa.png')
         self.moving_right = False
@@ -63,6 +66,9 @@ class Player:
         self.config_items = []
 
     def handle_player(self, tiles, display, camera_speed, mob_alive):
+        '''
+        Function is responsible for handling player's actions
+        '''
         self.drawing(display, camera_speed)
         self.inventory_and_workshop(display, mob_alive)
         self.define_velocity()
@@ -71,6 +77,9 @@ class Player:
         self.craftshop()
 
     def is_moving_down(self, event):
+        '''
+        Function is responsible for handling player's movements with pressing keyboard buttons
+        '''
         if event.key == K_d:
             self.moving_right = True
         if event.key == K_a:
@@ -81,12 +90,18 @@ class Player:
                 self.player_y_gravitation = self.step_y
 
     def is_moving_up(self, event):
+        '''
+        Function is responsible for handling player's movements with releasing keyboard buttons
+        '''
         if event.key == K_d:
             self.moving_right = False
         if event.key == K_a:
             self.moving_left = False
 
     def placement(self, tiles):
+        '''
+        Function is responsible for player's movement and checking a touch with the surface
+        '''
         self.collision_types = {'top': False, 'bottom': False, 'right': False, 'left': False}
         self.player_rect.x += self.velocity[0]
         touches = self.touching(tiles)
@@ -109,6 +124,9 @@ class Player:
         return self.player_rect, self.collision_types
 
     def touching(self, tiles):
+        '''
+        Function is responsible for identifying a touch with a player
+        '''
         hit_list = []
         for tile in tiles:
             if self.player_rect.colliderect(tile):
@@ -116,6 +134,9 @@ class Player:
         return hit_list
 
     def define_velocity(self):
+        '''
+        Function is responsible for player's velocity
+        '''
         self.velocity = [0, 0]
         if self.moving_right:
             self.velocity[0] += self.step_x
@@ -131,6 +152,9 @@ class Player:
             self.player_y_gravitation = 3
 
     def gravitation(self):
+        '''
+        Function is responsible for the player staying at the surface
+        '''
         if self.collision_types['bottom']:
             self.air_time = 0
             self.player_y_gravitation = 0
@@ -138,6 +162,9 @@ class Player:
             self.air_time += 1
 
     def drawing(self, display, camera_speed):
+        '''
+        Function is responsible for showing the player on the screen
+        '''
         self.player_image = self.player_image.convert_alpha()
         if self.moving_right:
             display.blit(pygame.transform.flip(self.player_image, False, False),
@@ -189,6 +216,10 @@ class Player:
                                   self.player_rect.y - camera_speed[1] + self.sheld.object.get_height() * 3 / 5))
 
     def destroy(self, tiles, event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera: []):
+        '''
+        Function is responsible for destroying blocks in the world by the player and giving
+        destroyed blocks to the player (moving them to his inventory)
+        '''
         a = self.ground.object_item
         b = self.grass.object_item
         c = self.stone.object_item
@@ -221,6 +252,10 @@ class Player:
                         game_map[int(tile.y / TILE_SIZE_y)][int(tile.x / TILE_SIZE_x)] = '0'
 
     def build(self, tiles, event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera: []):
+        '''
+        Function is responsible for building with blocks in the world by the player and taking
+        set blocks to the player (moving them from his inventory)
+        '''
         self.ground.inventory_define()
         self.grass.inventory_define()
         self.stone.inventory_define()
@@ -234,6 +269,9 @@ class Player:
                                      TILE_SIZE_y))
 
     def define_workshop(self, object):
+        '''
+        Function is responsible for showing items in the workshop and crafting in it
+        '''
         if object.moving:
             if ((self.workshop_rect.x + 14) * self.inventory_size - self.mouse[0]) ** 2 + (
                     (self.workshop_rect.y + self.player_image.get_height() / 2 - 11) * self.inventory_size -
@@ -245,6 +283,10 @@ class Player:
                     object.object_item -= 1
 
     def inventory_and_workshop(self, display, mob_alive):
+        '''
+        Function is responsible for showing inventory, items in the inventory, items in the workshop and
+        the process of choosing the items in the inventory
+        '''
         pygame.draw.rect(display, (GREY), self.inventory_rect)
 
         if self.workshop_is_shown:
@@ -298,6 +340,9 @@ class Player:
             self.grass.object_item_show(display, object_number, self.labelFont)
 
     def inventory_item_movement(self, event, object):
+        '''
+        Function is responsible for moving items from the inventory to the workshop
+        '''
         if object.object_inventory:
             if (self.inventory_location[0] + (
                     (object.object_number - 1) * self.player_image.get_width() + 14) * self.inventory_size -
@@ -307,6 +352,9 @@ class Player:
                 object.moving = True
 
     def workshop(self, event):
+        '''
+        Function is responsible for activating the workshop by the player
+        '''
         if event.key == K_e:
             if not self.workshop_is_shown:
                 self.workshop_is_shown = True
@@ -314,6 +362,9 @@ class Player:
                 self.workshop_is_shown = False
 
     def object_inventory_moving(self, event, display, object):
+        '''
+        Function is responsible for showing items moving from the inventory to the workshop
+        '''
         if object.object_inventory and object.moving:
             display.blit(pygame.transform.scale(object.object, (
                 int(object.object.get_width() * self.inventory_size),
@@ -322,11 +373,17 @@ class Player:
                              event.pos[1]))
 
     def drop_item(self, event, object):
+        '''
+        Function is responsible for activating a drop of the items
+        '''
         if event.key == K_q:
             object.object_item = 0
             self.define_workshop(object)
 
     def drop_items(self, event):
+        '''
+        Function is responsible for dropping the items by the player
+        '''
         if self.num == 3:
             self.drop_item(event, self.ground)
         if self.num == 4:
@@ -339,6 +396,9 @@ class Player:
             self.drop_item(event, self.sheld)
 
     def craftshop(self):
+        '''
+        Function is responsible for crafting receipts
+        '''
         if self.workshop_identificator == self.ground.identificator:
             if self.ground.object_workshop_item >= 3:
                 while self.ground.object_workshop_item >= 3:
@@ -358,11 +418,11 @@ class Player:
             self.grass.object_workshop_item = 0
 
         if self.workshop_identificator == self.stone.identificator:
-            if self.stone.object_workshop_item >= 10:
-                while self.stone.object_workshop_item >= 10:
+            if self.stone.object_workshop_item >= 5:
+                while self.stone.object_workshop_item >= 5:
                     self.sword.object_item = 1
                     self.sword.inventory_define()
-                    self.stone.object_workshop_item -= 10
+                    self.stone.object_workshop_item -= 5
             self.stone.object_item += self.stone.object_workshop_item
             self.stone.object_workshop = False
             self.stone.object_workshop_item = 0

@@ -5,6 +5,9 @@ from game_map import RED, GREEN, WINDOW_SIZE
 
 
 class Mob:
+    '''
+    Class is responsible for actions of the mob and its interaction with a player
+    '''
     def __init__(self, mob_location, difficulty):
         self.difficulty = 30 * difficulty
         self.mob_image = pygame.image.load('pictures/ghost2.png')
@@ -32,6 +35,9 @@ class Mob:
         self.alive = True
 
     def handle_mob(self, tiles, display, player_rect_x, player_rect_y, camera, player_sheld):
+        '''
+        Function is responsible for handling mob's actions
+        '''
         if self.alive:
             self.drawing(display, camera)
             self.health_mob(display, camera)
@@ -40,6 +46,9 @@ class Mob:
         self.death_mob(player_sheld)
 
     def placement_mob(self, tiles):
+        '''
+        Function is responsible for mob's movement and checking a touch with the surface
+        '''
         self.collision_types = {'top': False, 'bottom': False, 'right': False, 'left': False}
         self.mob_rect.x += self.velocity[0]
         # left-right wall enabled
@@ -63,6 +72,9 @@ class Mob:
         return self.mob_rect, self.collision_types
 
     def touching_mob(self, tiles):
+        '''
+        Function is responsible for identifying a touch with mob
+        '''
         hit_list = []
         for tile in tiles:
             if self.mob_rect.colliderect(tile):
@@ -70,6 +82,9 @@ class Mob:
         return hit_list
 
     def define_velocity_mob(self, player_rect_x, player_rect_y):
+        '''
+        Function is responsible for mob's velocity
+        '''
         if abs(player_rect_x - self.mob_rect.x) < 300:
             if player_rect_x - self.difficulty > self.mob_rect.x:
                 self.velocity[0] = self.step_x / 2
@@ -90,6 +105,9 @@ class Mob:
                     self.velocity[1] = 0
 
     def health_mob(self, display, camera_mob):
+        '''
+        Function is responsible for mob's health and showing it on the screen
+        '''
         self.red = pygame.Rect(self.mob_rect.x - camera_mob[0] - 10, self.mob_rect.y - camera_mob[1] - 10, self.full_hp_indicator,
                                5)
         self.green = pygame.Rect(self.mob_rect.x - camera_mob[0] - 10, self.mob_rect.y - camera_mob[1] - 10,
@@ -98,6 +116,9 @@ class Mob:
         pygame.draw.rect(display, GREEN, self.green)
 
     def hit_mob(self, event, camera, num, is_sword):
+        '''
+        Function is responsible for mechanics of mob's health
+        '''
         a = self.hp
         b = self.hp_indicator
         if (self.mob_rect.x - camera[0] - event.pos[0] + self.mob_image.get_width() / 2) ** 2 + (
@@ -120,6 +141,9 @@ class Mob:
     #         player.hp -= 1
 
     def death_mob(self, player_sheld):
+        '''
+        Function is responsible for mechanics of mob's death
+        '''
         if not self.alive:
             self.mob_image = pygame.image.load('pictures/death_mob.jpg')
             self.full_hp_indicator = 0
@@ -127,6 +151,9 @@ class Mob:
             player_sheld += 1
 
     def drawing(self, display, camera_speed):
+        '''
+        Function is responsible for showing the mob on the screen
+        '''
         if self.moving_right:
             display.blit(pygame.transform.flip(self.mob_image, True, False),
                          (self.mob_rect.x - camera_speed[0], self.mob_rect.y - camera_speed[1]))

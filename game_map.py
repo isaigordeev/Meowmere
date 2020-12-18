@@ -15,7 +15,11 @@ GREEN = (0, 255, 0)
 WHITE = (255, 255, 255)
 ICE_COLOR = (140, 169, 200)
 
+
 class Map(GameObject):
+    '''
+    Class responsible for setting surfaces and generating world on the screen
+    '''
     def __init__(self):
         self.tile_surface = []
         self.game_map = [[]]
@@ -30,7 +34,11 @@ class Map(GameObject):
         self.menu_display = pygame.Surface(WINDOW_SIZE)
         self.display = pygame.transform.scale(self.display,
                               (WINDOW_SIZE[0], WINDOW_SIZE[1]))
+
     def generation(self):
+        '''
+        Function is responsible for generation of the world (obsolete)
+        '''
         for i in range(int(WINDOW_SIZE[1] / self.grass.get_height()) + 1):
             self.game_map.append([])
             for j in range(int(WINDOW_SIZE[0] / self.grass.get_width()) + 1):
@@ -47,6 +55,9 @@ class Map(GameObject):
                 print(*self.game_map[i])
 
     def building(self, camera):
+        '''
+        Function is responsible for visual generation of the world
+        '''
         self.grass = self.grass.convert_alpha()
         self.ground = self.ground.convert_alpha()
         y = 0

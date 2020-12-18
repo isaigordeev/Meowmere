@@ -2,14 +2,17 @@ from game_map import WINDOW_SIZE
 
 
 class Camera:
+    '''
+    Class is responsible for camera, which moves with player and mob
+    '''
     def __init__(self):
         self.scroll_speed = [0, 0]
-        self.scroll_mob_speed = [0,0]
+        self.scroll_mob_speed = [0, 0]
         self.displacement_y = -100
         self.displacement_x = -100
 
     def moving_cam(self, player_x, player_y):
-        self.scroll_speed[0] += (player_x - self.scroll_speed[0] -(WINDOW_SIZE[0]+self.displacement_x)/2) / 10
+        self.scroll_speed[0] += (player_x - self.scroll_speed[0] - (WINDOW_SIZE[0]+self.displacement_x)/2) / 10
         self.scroll_speed[1] += (player_y - self.scroll_speed[1] - (WINDOW_SIZE[1]+self.displacement_y)/2) / 10
 
     def moving_mob_cam(self, mob_x, mob_y):
