@@ -21,6 +21,7 @@ Camera = Camera()
 Music = Music()
 random_map.create_map()
 World.map_file_reading('map_seed')
+Tanya.config_reading('config')
 Tanya.player_image.convert()
 Tanya.player_image.set_colorkey((255, 255, 255))
 finished = False
@@ -61,6 +62,7 @@ while not finished:
             condition = 1
         elif text == "EXIT":
             finished = True
+            Tanya.config_writing('config')
             pygame.quit()
             sys.exit()
 
@@ -72,6 +74,7 @@ while not finished:
             condition = 1
         elif text == "EXIT":
             finished = True
+            Tanya.config_writing('config')
             pygame.quit()
             sys.exit()
 

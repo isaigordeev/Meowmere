@@ -60,7 +60,7 @@ class Player:
         self.mouse = ()
         self.workshop_identificator = 0
         #self.music = Music()
-        self.config_items = ''
+        self.config_items = []
 
     def handle_player(self, tiles, display, camera_speed, mob_alive):
         self.drawing(display, camera_speed)
@@ -325,6 +325,7 @@ class Player:
         if event.key == K_q:
             object.object_item = 0
             self.define_workshop(object)
+
     def drop_items(self, event):
         if self.num == 4:
             self.drop_item(event, self.ground)
@@ -334,7 +335,6 @@ class Player:
             self.drop_item(event, self.stone)
         if self.num == 1:
             self.drop_item(event, self.sword)
-        
 
     def craftshop(self):
         if self.workshop_identificator == self.ground.identificator:
@@ -369,30 +369,28 @@ class Player:
         f = open(path+'.txt')
         self.data = f.read()
         f.close()
-        self.data = self.data.split('\n')
+        self.data = self.data.split(' ')
         for row in self.data:
-            self.config_items.append(list(row))
-
-    def give_config_items(self):
-        self.sword.object_item = self.config_items[0]
-        self.ground.object_item = self.config_items[1]
-        self.grass.object_item = self.config_items[2]
-        self.stone.object_item = self.config_items[3]
+            self.config_items.append(row)
+        print(self.config_items)
+        self.get_config_items()
+    
+    def get_config_items(self):
+        self.sword.object_item = int(self.config_items[0])
+        self.ground.object_item = int(self.config_items[1])
+        self.grass.object_item = int(self.config_items[2])
+        self.stone.object_item = int(self.config_items[3])
 
     def config_writing(self, path):
-        f = open(path+'.txt')
-        # self.config_items += str(self.sword.object_item)
-        # self.config_items +=(str(self.ground.object_item))
-        # self.config_items+=(str(self.grass.object_item))
-        # self.config_items+=(str(self.stone.object_item))
-        self.config_items.append(self.sword.object_item)
-        self.config_items.append(self.ground.object_item)
-        self.config_items.append(self.grass.object_item)
-        self.config_items.append(self.stone.object_item)
-        for item in self.config_items:
-            f.write(item)
+        config_items = ''
+        config_items += str(self.sword.object_item)
+        config_items += str(self.ground.object_item)
+        config_items += str(self.grass.object_item)
+        config_items += str(self.stone.object_item)
+        f = open(path+'.txt', 'w')
+        for i in range(4):
+            f.write(config_items[i] + ' ')
         f.close()
-
 
     def choice_item(self, event):
         if event.key == K_1:
