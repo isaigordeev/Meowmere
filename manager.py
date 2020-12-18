@@ -87,7 +87,7 @@ while not finished:
         pygame.draw.rect(World.display, ICE_COLOR, pygame.Rect(int(0 - Camera.scroll_speed[0]),
                                                                int(175 - Camera.scroll_speed[1]), 725, 200))
         Max.handle_mob(World.tile_surface, World.display, Tanya.player_rect.x, Tanya.player_rect.y,
-                       Camera.scroll_speed, Tanya.sheld.object_item)
+                       Camera.scroll_speed, Tanya.sled.object_item)
         Camera_mob.moving_cam(Max.mob_rect.x, Max.mob_rect.y)
 
         World.building(Camera.scroll_speed)

@@ -51,7 +51,7 @@ class Player:
                                self.inventory_size, self.inventory_location, '4')
         self.hand = Inventory(pygame.image.load('pictures/inventory/mitten.png'), 2,
                               self.inventory_size, self.inventory_location, '5')
-        self.sheld = Inventory(pygame.image.load('pictures/inventory/sheld.png'), 6,
+        self.sled = Inventory(pygame.image.load('pictures/inventory/sled.png'), 6,
                                self.inventory_size, self.inventory_location, '5')
         self.labelFont = pygame.font.SysFont('Italic', 20 * int(self.inventory_size))
 
@@ -145,7 +145,7 @@ class Player:
             self.velocity[0] += self.step_x
         if self.moving_left:
             self.velocity[0] += -self.step_x
-        if self.sheld.object_item > 0 and self.num == 6:
+        if self.sled.object_item > 0 and self.num == 6:
             self.velocity[1] += 2 * self.player_y_gravitation
             self.player_y_gravitation += 0.1 * self.gravity_step_down
         else:
@@ -177,10 +177,10 @@ class Player:
                              (self.player_rect.x - camera_speed[0] + self.sword.object.get_width(),
                               self.player_rect.y - camera_speed[1]))
 
-            if self.sheld.object_inventory and self.num == 6:
-                display.blit(pygame.transform.flip(self.sheld.object, True, False),
+            if self.sled.object_inventory and self.num == 6:
+                display.blit(pygame.transform.flip(self.sled.object, True, False),
                              (self.player_rect.x - camera_speed[0],
-                              self.player_rect.y - camera_speed[1] + self.sheld.object.get_height() * 3 / 5))
+                              self.player_rect.y - camera_speed[1] + self.sled.object.get_height() * 3 / 5))
             self.last_side = 0
         elif self.moving_left:
             display.blit(pygame.transform.flip(self.player_image, True, False),
@@ -189,10 +189,10 @@ class Player:
                 display.blit(pygame.transform.flip(self.sword.object, True, False),
                              (self.player_rect.x - camera_speed[0] - self.sword.object.get_width(),
                               self.player_rect.y - camera_speed[1]))
-            if self.sheld.object_inventory and self.num == 6:
-                display.blit(pygame.transform.flip(self.sheld.object, False, False),
+            if self.sled.object_inventory and self.num == 6:
+                display.blit(pygame.transform.flip(self.sled.object, False, False),
                              (self.player_rect.x - camera_speed[0],
-                              self.player_rect.y - camera_speed[1] + self.sheld.object.get_height() * 3 / 5))
+                              self.player_rect.y - camera_speed[1] + self.sled.object.get_height() * 3 / 5))
             self.last_side = 1
         elif not self.moving_right and not self.moving_left:
             if self.last_side == 0:
@@ -202,10 +202,10 @@ class Player:
                     display.blit(pygame.transform.flip(self.sword.object, False, False),
                                  (self.player_rect.x - camera_speed[0] + self.sword.object.get_width(),
                                   self.player_rect.y - camera_speed[1]))
-                if self.sheld.object_inventory and self.num == 6:
-                    display.blit(pygame.transform.flip(self.sheld.object, True, False),
+                if self.sled.object_inventory and self.num == 6:
+                    display.blit(pygame.transform.flip(self.sled.object, True, False),
                                  (self.player_rect.x - camera_speed[0],
-                                  self.player_rect.y - camera_speed[1] + self.sheld.object.get_height() * 3 / 5))
+                                  self.player_rect.y - camera_speed[1] + self.sled.object.get_height() * 3 / 5))
             elif self.last_side == 1:
                 display.blit(pygame.transform.flip(self.player_image, True, False),
                              (self.player_rect.x - camera_speed[0], self.player_rect.y - camera_speed[1]))
@@ -213,10 +213,10 @@ class Player:
                     display.blit(pygame.transform.flip(self.sword.object, True, False),
                                  (self.player_rect.x - camera_speed[0] - self.sword.object.get_width(),
                                   self.player_rect.y - camera_speed[1]))
-                if self.sheld.object_inventory and self.num == 6:
-                    display.blit(pygame.transform.flip(self.sheld.object, False, False),
+                if self.sled.object_inventory and self.num == 6:
+                    display.blit(pygame.transform.flip(self.sled.object, False, False),
                                  (self.player_rect.x - camera_speed[0],
-                                  self.player_rect.y - camera_speed[1] + self.sheld.object.get_height() * 3 / 5))
+                                  self.player_rect.y - camera_speed[1] + self.sled.object.get_height() * 3 / 5))
 
     def destroy(self, tiles, event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera: []):
         '''
@@ -323,8 +323,8 @@ class Player:
         self.hand.object_item = 1
         self.hand.object_inventory_show(display)
         if not mob_alive:
-            self.sheld.object_item = 1
-            self.sheld.object_inventory_show(display)
+            self.sled.object_item = 1
+            self.sled.object_inventory_show(display)
 
         pygame.draw.rect(display, RED, pygame.Rect(
             self.inventory_location[0] + (self.num - 1) * self.player_image.get_width() * self.inventory_size,
@@ -396,7 +396,7 @@ class Player:
         if self.num == 1:
             self.drop_item(event, self.sword)
         if self.num == 6:
-            self.drop_item(event, self.sheld)
+            self.drop_item(event, self.sled)
 
     def craftshop(self):
         '''
