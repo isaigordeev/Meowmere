@@ -20,20 +20,21 @@ class Map(GameObject):
     '''
     Class responsible for setting surfaces and generating world on the screen
     '''
+
     def __init__(self):
         self.tile_surface = []
         self.game_map = [[]]
-        self.screen = pygame.display.set_mode(WINDOW_SIZE, DOUBLEBUF|HWSURFACE, 32)
+        self.screen = pygame.display.set_mode(WINDOW_SIZE, DOUBLEBUF | HWSURFACE, 32)
         self.grass = pygame.image.load('pictures/snow.jpg').convert()
         self.ground = pygame.image.load('pictures/ground2.png').convert()
         self.stone = pygame.image.load('pictures/stone.png').convert()
         self.bedrock = pygame.image.load('pictures/bedrock.png').convert()
         self.TILE_SIZE_x = self.grass.get_width()
         self.TILE_SIZE_y = self.grass.get_height()
-        self.display = pygame.Surface((WINDOW_SIZE[0]//2,WINDOW_SIZE[1]//2))
+        self.display = pygame.Surface((WINDOW_SIZE[0] // 2, WINDOW_SIZE[1] // 2))
         self.menu_display = pygame.Surface(WINDOW_SIZE)
         self.display = pygame.transform.scale(self.display,
-                              (WINDOW_SIZE[0], WINDOW_SIZE[1]))
+                                              (WINDOW_SIZE[0], WINDOW_SIZE[1]))
 
     def generation(self):
         '''
@@ -52,7 +53,7 @@ class Map(GameObject):
 
     def print_map_seed_by(self):
         for i in range(int(WINDOW_SIZE[1] / self.grass.get_height()) + 1):
-                print(*self.game_map[i])
+            print(*self.game_map[i])
 
     def building(self, camera):
         '''
@@ -72,7 +73,7 @@ class Map(GameObject):
                     self.display.blit(self.stone, (x * self.TILE_SIZE_x - camera[0], y * self.TILE_SIZE_y - camera[1]))
                 if tile == '4':
                     self.display.blit(self.bedrock,
-                                        (x * self.TILE_SIZE_x - camera[0], y * self.TILE_SIZE_y - camera[1]))
+                                      (x * self.TILE_SIZE_x - camera[0], y * self.TILE_SIZE_y - camera[1]))
                 if tile != '0':
                     self.tile_surface.append(
                         pygame.Rect(x * self.TILE_SIZE_x, y * self.TILE_SIZE_y, self.TILE_SIZE_x, self.TILE_SIZE_y))
@@ -80,7 +81,7 @@ class Map(GameObject):
             y += 1
 
     def map_file_reading(self, path):
-        f = open(path+'.txt')
+        f = open(path + '.txt')
         self.data = f.read()
         f.close()
         self.data = self.data.split('\n')

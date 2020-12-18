@@ -5,10 +5,10 @@ from mob import *
 from music import *
 from menu import *
 from music import *
-import random_map 
+import random_map
+
 clock = pygame.time.Clock()
 pygame.init()
-
 
 Tanya = Player([200, 0])
 
@@ -31,6 +31,7 @@ menu_font = pygame.font.Font(None, 60)
 
 Music.main_music(condition)
 
+
 def update_fps():
     """Writes current fps on the screen"""
     fps = str(int(clock.get_fps()))
@@ -38,8 +39,9 @@ def update_fps():
     return fps_text
 
 
-options_start = [Menu("START GAME", ((WINDOW_SIZE[1] - 250) // 2, (WINDOW_SIZE[0]) // 3), World.menu_display, menu_font),
-                 Menu("EXIT", ((WINDOW_SIZE[1] - 110) // 2, (WINDOW_SIZE[0]) // 2.3), World.menu_display, menu_font)]
+options_start = [
+    Menu("START GAME", ((WINDOW_SIZE[1] - 250) // 2, (WINDOW_SIZE[0]) // 3), World.menu_display, menu_font),
+    Menu("EXIT", ((WINDOW_SIZE[1] - 110) // 2, (WINDOW_SIZE[0]) // 2.3), World.menu_display, menu_font)]
 options_continue = [Menu("CONTINUE", ((WINDOW_SIZE[1] - 200) // 2, (WINDOW_SIZE[0]) // 3), World.display, menu_font),
                     Menu("EXIT", ((WINDOW_SIZE[1] - 110) // 2, (WINDOW_SIZE[0]) // 2.3), World.display, menu_font)]
 
@@ -90,7 +92,7 @@ while not finished:
 
         World.building(Camera.scroll_speed)
 
-        Tanya.handle_player(World.tile_surface, World.display, Camera.scroll_speed, Max.alive )
+        Tanya.handle_player(World.tile_surface, World.display, Camera.scroll_speed, Max.alive)
         World.display.blit(update_fps(), (300, 0))
 
     for event in pygame.event.get():
@@ -132,7 +134,6 @@ while not finished:
                 Tanya.ground.moving = False
                 Tanya.grass.moving = False
                 Tanya.stone.moving = False
-
 
     # pygame.display.flip()
     pygame.display.update()

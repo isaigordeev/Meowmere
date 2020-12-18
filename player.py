@@ -7,10 +7,13 @@ from inventory import *
 
 pygame.font.init()
 
+
 class Player:
     '''
-    Class is responsible for actions of the player and its interaction with the inventory, the mob and the internal world
+    Class is responsible for actions of the player and its interaction with the inventory,
+    the mob and the internal world
     '''
+
     def __init__(self, player_location):
         self.player_image = pygame.image.load('pictures/santa.png')
         self.moving_right = False
@@ -49,7 +52,7 @@ class Player:
         self.hand = Inventory(pygame.image.load('pictures/inventory/mitten.png'), 2,
                               self.inventory_size, self.inventory_location, '5')
         self.sheld = Inventory(pygame.image.load('pictures/inventory/sheld.png'), 6,
-                              self.inventory_size, self.inventory_location, '5')
+                               self.inventory_size, self.inventory_location, '5')
         self.labelFont = pygame.font.SysFont('Italic', 20 * int(self.inventory_size))
 
         self.full_hp = 100
@@ -62,7 +65,7 @@ class Player:
                                          self.player_image.get_width() * self.inventory_size)
         self.mouse = ()
         self.workshop_identificator = 0
-        #self.music = Music()
+        # self.music = Music()
         self.config_items = []
 
     def handle_player(self, tiles, display, camera_speed, mob_alive):
@@ -143,8 +146,8 @@ class Player:
         if self.moving_left:
             self.velocity[0] += -self.step_x
         if self.sheld.object_item > 0 and self.num == 6:
-            self.velocity[1] += 2*self.player_y_gravitation
-            self.player_y_gravitation += 0.1*self.gravity_step_down
+            self.velocity[1] += 2 * self.player_y_gravitation
+            self.player_y_gravitation += 0.1 * self.gravity_step_down
         else:
             self.velocity[1] += self.player_y_gravitation
             self.player_y_gravitation += self.gravity_step_down
@@ -176,8 +179,8 @@ class Player:
 
             if self.sheld.object_inventory and self.num == 6:
                 display.blit(pygame.transform.flip(self.sheld.object, True, False),
-                             (self.player_rect.x - camera_speed[0] ,
-                              self.player_rect.y - camera_speed[1] + self.sheld.object.get_height()*3/5))
+                             (self.player_rect.x - camera_speed[0],
+                              self.player_rect.y - camera_speed[1] + self.sheld.object.get_height() * 3 / 5))
             self.last_side = 0
         elif self.moving_left:
             display.blit(pygame.transform.flip(self.player_image, True, False),
@@ -287,7 +290,7 @@ class Player:
         Function is responsible for showing inventory, items in the inventory, items in the workshop and
         the process of choosing the items in the inventory
         '''
-        pygame.draw.rect(display, (GREY), self.inventory_rect)
+        pygame.draw.rect(display, GREY, self.inventory_rect)
 
         if self.workshop_is_shown:
             pygame.draw.rect(display, GREY, self.workshop_rect)
@@ -428,14 +431,14 @@ class Player:
             self.stone.object_workshop_item = 0
 
     def config_reading(self, path):
-        f = open(path+'.txt')
+        f = open(path + '.txt')
         self.data = f.read()
         f.close()
         self.data = self.data.split(' ')
         for row in self.data:
             self.config_items.append(row)
         self.get_config_items()
-    
+
     def get_config_items(self):
         self.sword.object_item = int(self.config_items[0])
         self.ground.object_item = int(self.config_items[1])
@@ -448,7 +451,7 @@ class Player:
         config_items += str(self.ground.object_item)
         config_items += str(self.grass.object_item)
         config_items += str(self.stone.object_item)
-        f = open(path+'.txt', 'w')
+        f = open(path + '.txt', 'w')
         for i in range(4):
             f.write(config_items[i] + ' ')
         f.close()

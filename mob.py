@@ -1,4 +1,5 @@
-import pygame, sys
+import pygame
+import sys
 from pygame.locals import *
 
 from game_map import RED, GREEN, WINDOW_SIZE
@@ -108,8 +109,8 @@ class Mob:
         '''
         Function is responsible for mob's health and showing it on the screen
         '''
-        self.red = pygame.Rect(self.mob_rect.x - camera_mob[0] - 10, self.mob_rect.y - camera_mob[1] - 10, self.full_hp_indicator,
-                               5)
+        self.red = pygame.Rect(self.mob_rect.x - camera_mob[0] - 10, self.mob_rect.y - camera_mob[1] - 10,
+                               self.full_hp_indicator, 5)
         self.green = pygame.Rect(self.mob_rect.x - camera_mob[0] - 10, self.mob_rect.y - camera_mob[1] - 10,
                                  self.hp_indicator, 5)
         pygame.draw.rect(display, RED, self.red)

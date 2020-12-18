@@ -1,4 +1,5 @@
-import pygame, sys
+import pygame
+import sys
 from pygame.locals import *
 from game_map import GREY, WINDOW_SIZE, RED, BLACK, BROWN
 
@@ -7,6 +8,7 @@ class Inventory:
     '''
     Class is responsible for workshop, inventory items, their location, number and type
     '''
+
     def __init__(self, object_image, object_number, inventory_size, inventory_location, identificator):
         self.inventory_location = inventory_location
         self.object = object_image
@@ -41,17 +43,18 @@ class Inventory:
         self.inventory_define()
         if self.object_inventory:
             display.blit(pygame.transform.scale(self.object, (
-            int(self.object.get_width() * self.inventory_size), int(self.object.get_height() * self.inventory_size))), (
-                         self.inventory_location[0] + (
+                int(self.object.get_width() * self.inventory_size),
+                int(self.object.get_height() * self.inventory_size))), (
+                             self.inventory_location[0] + (
                                      self.object_number - 1) * self.object.get_width() * self.inventory_size,
-                         self.inventory_location[1]))
+                             self.inventory_location[1]))
 
     def object_workshop_show(self, display):
         '''
         Function is responsible for showing an item in the workshop
         '''
         display.blit(pygame.transform.scale(self.object, (
-                     int(self.object.get_width() * self.inventory_size), int(self.object.get_height() * self.inventory_size))), (
+            int(self.object.get_width() * self.inventory_size), int(self.object.get_height() * self.inventory_size))), (
                          self.workshop_rect.x,
                          self.workshop_rect.y))
 
@@ -61,17 +64,17 @@ class Inventory:
         '''
         if object_number == self.object_number:
             display.blit(labelFont.render(str(self.object_item), False, BLACK), (
-                self.inventory_location[0] + ((
-                                                      object_number - 1) * self.object.get_width() + 15) * self.inventory_size,
-                self.inventory_location[1] + (self.object.get_height()-14) * self.inventory_size))
+                self.inventory_location[0] + ((object_number - 1)
+                                              * self.object.get_width() + 15) * self.inventory_size,
+                self.inventory_location[1] + (self.object.get_height() - 14) * self.inventory_size))
 
     def object_item_workshop_show(self, display, labelFont):
         '''
         Function is responsible for showing a number of items in the workshop
         '''
         display.blit(labelFont.render(str(self.object_workshop_item), False, BLACK),
-                        (self.workshop_rect.x,
-                         self.workshop_rect.y))
+                     (self.workshop_rect.x,
+                      self.workshop_rect.y))
 
     def inventory_build(self, event, game_map, TILE_SIZE_x, TILE_SIZE_y, camera, num):
         '''
