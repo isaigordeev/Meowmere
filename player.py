@@ -327,14 +327,16 @@ class Player:
             self.define_workshop(object)
 
     def drop_items(self, event):
-        if self.num == 4:
+        if self.num == 3:
             self.drop_item(event, self.ground)
-        if self.num == 5:
+        if self.num == 4:
             self.drop_item(event, self.grass)
-        if self.num == 6:
+        if self.num == 5:
             self.drop_item(event, self.stone)
         if self.num == 1:
             self.drop_item(event, self.sword)
+        if self.num == 6:
+            self.drop_item(event, self.sheld)
 
     def craftshop(self):
         if self.workshop_identificator == self.ground.identificator:
@@ -372,7 +374,6 @@ class Player:
         self.data = self.data.split(' ')
         for row in self.data:
             self.config_items.append(row)
-        print(self.config_items)
         self.get_config_items()
     
     def get_config_items(self):
