@@ -2,7 +2,9 @@ import pygame
 
 
 class Music:
-    """"Plays music for the game"""
+    '''
+    Function is responsible for playing the music for the game
+    '''
     pygame.init()
     pygame.mixer.init()
 
@@ -17,6 +19,6 @@ class Music:
             pygame.mixer.music.load('music/Christmas_pause_menu.wav')
             pygame.mixer.music.play(-1)
 
-    def break_music(self):
-        pygame.mixer.music.load('music/break.wav')
-        pygame.mixer.music.play(1)
+    # def break_music(self):
+    #     pygame.mixer.music.load('music/break.wav')
+    #     pygame.mixer.music.play(1)

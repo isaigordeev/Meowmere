@@ -4,6 +4,9 @@ from game_map import *
 
 
 class Menu:
+    '''
+    Class is responsible for generating menu and showing it on the screen
+    '''
     hovered = False
     clicked = False
 
@@ -16,6 +19,9 @@ class Menu:
         self.draw()
 
     def draw(self):
+        '''
+        Function is responsible for showing menu on the screen
+        '''
         self.set_render()
         self.display.blit(self.render, self.rect)
 
@@ -37,6 +43,9 @@ class Menu:
         self.rect.topleft = self.pos
 
     def new_window(self, display):
+        '''
+        Function is responsible for creating a new window after the player choose to start the game
+        '''
         if self.clicked:
             display.fill(WHITE)
         else:
@@ -44,6 +53,9 @@ class Menu:
 
 
 def menu_event(options, display):
+    '''
+    Function is responsible for handling the player's interaction with the menu
+    '''
     for option in options:
         if option.rect.collidepoint(pygame.mouse.get_pos()):
             option.hovered = True

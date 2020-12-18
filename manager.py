@@ -29,7 +29,6 @@ condition = 0
 
 menu_font = pygame.font.Font(None, 60)
 
-#Tanya.music.main_music(condition)
 Music.main_music(condition)
 
 def update_fps():
