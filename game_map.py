@@ -4,7 +4,8 @@ from game_object import *
 
 pygame.display.set_caption('under_Terraria')
 
-WINDOW_SIZE = (720, 713)
+# WINDOW_SIZE = (720, 713)
+WINDOW_SIZE = (1080, 713)
 
 BACKGROUND_COLOR = (146, 244, 255)
 BROWN = (125, 75, 0)
@@ -61,6 +62,7 @@ class Map(GameObject):
         '''
         self.grass = self.grass.convert_alpha()
         self.ground = self.ground.convert_alpha()
+        tile_surface = []
         y = 0
         for row in self.game_map:
             x = 0
@@ -75,10 +77,11 @@ class Map(GameObject):
                     self.display.blit(self.bedrock,
                                       (x * self.TILE_SIZE_x - camera[0], y * self.TILE_SIZE_y - camera[1]))
                 if tile != '0':
-                    self.tile_surface.append(
+                    tile_surface.append(
                         pygame.Rect(x * self.TILE_SIZE_x, y * self.TILE_SIZE_y, self.TILE_SIZE_x, self.TILE_SIZE_y))
                 x += 1
             y += 1
+        return tile_surface
 
     def map_file_reading(self, path):
         f = open(path + '.txt')

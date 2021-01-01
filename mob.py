@@ -19,7 +19,7 @@ class Mob:
         self.moving_down = False
         self.velocity = [0, 0]
         self.step_x = 5
-        self.step_y = -15
+        self.step_y = -10
         self.mob_location = mob_location
         self.mob_y_gravitation = 0
         self.gravity_step_down = 0.3

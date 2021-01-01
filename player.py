@@ -22,7 +22,7 @@ class Player:
         self.moving_up = False
         self.moving_down = False
         self.velocity = [0, 0]
-        self.step_x = 5
+        self.step_x = 2
         self.step_y = -5
         self.player_location = player_location
         self.player_y_gravitation = 0
@@ -421,11 +421,11 @@ class Player:
             self.grass.object_workshop_item = 0
 
         if self.workshop_identificator == self.stone.identificator:
-            if self.stone.object_workshop_item >= 5:
-                while self.stone.object_workshop_item >= 5:
+            if self.stone.object_workshop_item >= 10:
+                while self.stone.object_workshop_item >= 10:
                     self.sword.object_item = 1
                     self.sword.inventory_define()
-                    self.stone.object_workshop_item -= 5
+                    self.stone.object_workshop_item -= 10
             self.stone.object_item += self.stone.object_workshop_item
             self.stone.object_workshop = False
             self.stone.object_workshop_item = 0
