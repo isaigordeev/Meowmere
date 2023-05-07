@@ -9,7 +9,6 @@ class Mob:
     '''
     Class is responsible for actions of the mob and its interaction with a player
     '''
-
     def __init__(self, mob_location, difficulty):
         self.difficulty = 30 * difficulty
         self.mob_image = pygame.image.load('pictures/ghost2.png')

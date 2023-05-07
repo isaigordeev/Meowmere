@@ -1,11 +1,20 @@
-from game_map import *
+# from mob import Mob
 from player import *
+import sys
+
+import random_map
 from camera import *
-from mob import *
-from music import *
 from menu import *
 from music import *
-import random_map
+from player import *
+from mob.mob import Mob
+
+
+import sys
+sys.path.append('../mob')
+
+# from mob import *
+
 
 clock = pygame.time.Clock()
 pygame.init()
